@@ -3,7 +3,7 @@ import API from '../services/api';
 export default {
   namespaced: true,
   state: {
-    color: '#ffffff',
+    color: '#aaaaaa',
     cloning: true,
     frame: 0,
     frames: 0,

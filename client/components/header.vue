@@ -85,6 +85,7 @@ export default {
     height: 100%;
     color: inherit;
     text-decoration: none;
+    outline: 0;
   }
   .actions {
     > a, > button {

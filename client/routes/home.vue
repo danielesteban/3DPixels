@@ -44,10 +44,12 @@ export default {
       :key="mesh._id"
       class="mesh"
     >
-      <Renderer
-        :mesh="mesh"
-        class="renderer"
-      />
+      <div class="renderer">
+        <Renderer
+          :mesh="mesh"
+          class="renderer"
+        />
+      </div>
       <router-link
         :style="{ backgroundColor: $options.filters.hexColor(mesh.bg) }"
         :to="{ name: 'editor', params: { id: mesh._id } }"
@@ -73,6 +75,7 @@ export default {
     flex-wrap: wrap;
     padding: 1.5rem;
     justify-content: center;
+    align-items: flex-start;
     margin: 0 auto;
     max-width: 1648px;
   }

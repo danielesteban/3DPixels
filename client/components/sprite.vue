@@ -4,7 +4,7 @@ import {
 } from 'three';
 import Touches from 'touches';
 
-const SIZE = 32;
+const SIZE = 64;
 const auxColor = new Color();
 
 export default {

@@ -1,6 +1,6 @@
 import { PNG } from 'pngjs';
 
-const SIZE = 32;
+const SIZE = 64;
 const DEPTH = 2;
 
 const decode = buffer => (

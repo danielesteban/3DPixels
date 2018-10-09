@@ -83,7 +83,7 @@ export default {
       state.renderer = new WebGLRenderer({ alpha: false, antialias: true });
       state.renderer.setPixelRatio(window.devicePixelRatio || 1);
       state.scene = new Scene();
-      state.scene.fog = new FogExp2(0, 0.008);
+      state.scene.fog = new FogExp2(0, 0.0075);
       state.tilt = new Object3D();
       state.tilt.add(state.camera);
       state.camera.position.z = 64;
@@ -155,8 +155,9 @@ export default {
       if (pointer.active) {
         const step = renderer.animationDelta * 0.2;
         pan.rotation.y -= pointer.movement.x * step;
+        pan.rotation.y = Math.min(Math.max(pan.rotation.y, Math.PI * -0.45), Math.PI * 0.45);
         tilt.rotation.x -= pointer.movement.y * step * 0.5;
-        tilt.rotation.x = Math.min(Math.max(tilt.rotation.x, Math.PI * -0.5), Math.PI * 0.1);
+        tilt.rotation.x = Math.min(Math.max(tilt.rotation.x, Math.PI * -0.45), Math.PI * 0.45);
         pointer.movement.x = 0;
         pointer.movement.y = 0;
       }

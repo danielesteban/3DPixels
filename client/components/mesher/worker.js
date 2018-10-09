@@ -80,13 +80,13 @@ const getMesh = (frames) => {
           x + 0.5, y + 0.5, 0,
           x - 0.5, y + 0.5, 0
         );
-        pushFace(
-          pixel,
-          x + 0.5, y - 0.5, -DEPTH,
-          x - 0.5, y - 0.5, -DEPTH,
-          x - 0.5, y + 0.5, -DEPTH,
-          x + 0.5, y + 0.5, -DEPTH
-        );
+        // pushFace(
+        //   pixel,
+        //   x + 0.5, y - 0.5, -DEPTH,
+        //   x - 0.5, y - 0.5, -DEPTH,
+        //   x - 0.5, y + 0.5, -DEPTH,
+        //   x + 0.5, y + 0.5, -DEPTH
+        // );
         if (x === 0 || !pixels[y][x - 1]) {
           pushFace(
             { r: pixel.r * 0.5, g: pixel.g * 0.5, b: pixel.b * 0.5 },

@@ -261,12 +261,15 @@ export default {
           </button>
         </div>
         <div>
-          Clone:&nbsp;
-          <input
-            :checked="cloning"
-            type="checkbox"
-            @click.prevent="toggleCloning"
-          >
+          <label>
+            <input
+              :checked="cloning"
+              type="checkbox"
+              @click.prevent="toggleCloning"
+            >
+            <span v-if="cloning">Clone</span>
+            <span v-else>Blank</span>
+          </label>
           <button
             @click="addFrame()"
           >
@@ -397,6 +400,11 @@ export default {
         padding: 0;
         cursor: pointer;
       }
+    }
+    label {
+      display: flex;
+      align-items: center;
+      margin: 0 0.75rem;
     }
   }
 </style>

@@ -97,7 +97,6 @@ export default {
       state.ground = new Ground();
       state.scene.add(state.ground);
       this.setClearColor(mesh.bg);
-      state.tilt.rotation.x = Math.PI * -0.1;
 
       mount.appendChild(state.renderer.domElement);
       mount.addEventListener('contextmenu', e => e.preventDefault());

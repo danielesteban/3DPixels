@@ -75,6 +75,7 @@ export default {
         <input
           ref="nameInput"
           name="name"
+          maxlength="25"
           type="text"
           required
         >

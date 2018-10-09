@@ -156,6 +156,7 @@ export default {
         v-if="isEditingTitle"
         ref="titleInput"
         :value="mesh.title"
+        maxlength="25"
         type="text"
         @keydown="onTitleInputKeydown"
         @blur="setTitle"

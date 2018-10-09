@@ -6,6 +6,7 @@ const validateMeshPayload = [
   body('fps').isNumeric(),
   body('title')
     .not().isEmpty()
+    .isLength({ min: 1, max: 25 })
     .trim()
     .escape(),
   (req, res, next) => {

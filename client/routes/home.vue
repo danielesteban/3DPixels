@@ -48,22 +48,21 @@ export default {
         :mesh="mesh"
         class="renderer"
       />
-      <div
+      <router-link
         :style="{ backgroundColor: $options.filters.hexColor(mesh.bg) }"
+        :to="{ name: 'editor', params: { id: mesh._id } }"
         class="meta"
       >
-        <div class="title">
+        <span class="title">
           {{ mesh.title }}
-        </div>
-        <div class="creator">
+        </span>
+        <span class="creator">
           by {{ mesh.creator.name }}
-        </div>
-        <div class="edit">
-          <router-link :to="{ name: 'editor', params: { id: mesh._id } }">
-            Edit
-          </router-link>
-        </div>
-      </div>
+        </span>
+        <span class="edit">
+          <span>Edit</span>
+        </span>
+      </router-link>
     </div>
   </div>
 </template>
@@ -84,6 +83,8 @@ export default {
     .meta {
       display: flex;
       align-items: center;
+      color: inherit;
+      text-decoration: none;
       overflow: hidden;
       .title, .creator, .edit {
         white-space: nowrap;
@@ -100,15 +101,12 @@ export default {
         padding: 0 0.75rem 0 0.5rem;
       }
       .edit {
-        display: flex;
+        background: rgba(0, 0, 0, .3);
         width: 0;
         transition: width ease-out .15s;
         will-change: width;
-        > a {
-          background: rgba(0, 0, 0, .3);
+        > span {
           padding: 0 0.75rem;
-          color: inherit;
-          text-decoration: none;
         }
       }
     }

@@ -7,6 +7,7 @@ module.exports.create = [
     .normalizeEmail(),
   body('name')
     .not().isEmpty()
+    .isLength({ min: 1, max: 25 })
     .trim()
     .escape(),
   body('password')

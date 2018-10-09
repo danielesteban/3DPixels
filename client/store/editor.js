@@ -59,9 +59,11 @@ export default {
       state.hasChanged = true;
     },
     SET_TITLE(state, title) {
-      state.mesh.title = title;
+      if (title && state.mesh.title !== title) {
+        state.mesh.title = title;
+        state.hasChanged = true;
+      }
       state.isEditingTitle = false;
-      state.hasChanged = true;
     },
     SET_TOOL(state, tool) {
       state.tool = tool;

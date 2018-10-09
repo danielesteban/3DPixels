@@ -22,6 +22,7 @@ export default {
   },
   computed: {
     ...mapState('editor', [
+      'cloning',
       'color',
       'frame',
       'frames',
@@ -142,6 +143,9 @@ export default {
     setTool(tool) {
       this.$store.dispatch('editor/setTool', tool);
     },
+    toggleCloning() {
+      this.$store.dispatch('editor/toggleCloning');
+    },
   },
 };
 </script>
@@ -223,6 +227,7 @@ export default {
         <Sprite
           v-if="mesh.texture"
           :background="mesh.bg | hexColor"
+          :cloning="cloning"
           :color="color"
           :frame="frame"
           :texture="mesh.texture"
@@ -256,6 +261,12 @@ export default {
           </button>
         </div>
         <div>
+          Clone:&nbsp;
+          <input
+            :checked="cloning"
+            type="checkbox"
+            @click.prevent="toggleCloning"
+          >
           <button
             @click="addFrame()"
           >
@@ -270,13 +281,15 @@ export default {
         </div>
       </div>
       <div class="single">
-        FPS:&nbsp;
-        <input
-          :value="mesh.fps"
-          type="number"
-          min="1"
-          @change="setFps"
-        >
+        <div>
+          FPS:&nbsp;
+          <input
+            :value="mesh.fps"
+            type="number"
+            min="1"
+            @change="setFps"
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -328,10 +341,10 @@ export default {
     > div {
       display: flex;
       justify-content: space-between;
-      align-items: center;
       width: 50%;
       > div {
         display: flex;
+        align-items: center;
       }
       &.single {
         justify-content: flex-end;

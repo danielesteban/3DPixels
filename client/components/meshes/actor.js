@@ -29,6 +29,7 @@ class Actor extends Mesh {
         frames,
       }) => {
         this.frames = frames;
+        this.frame = Math.max(this.frame, frames.length - 1);
         const frame = frames[this.frame];
         this.geometry.setDrawRange(frame.start, frame.count);
         this.geometry.setIndex(new BufferAttribute(index, 1));

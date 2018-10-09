@@ -14,6 +14,10 @@ export default {
       type: String,
       required: true,
     },
+    cloning: {
+      type: Boolean,
+      required: true,
+    },
     color: {
       type: String,
       required: true,
@@ -65,25 +69,31 @@ export default {
   methods: {
     addFrame() {
       const {
+        cloning,
         frame,
         state,
       } = this;
       const { width, height } = state;
       state.width = width + SIZE;
-      state.ctx.putImageData(state.pixels, 0, 0, 0, 0, (frame + 1) * SIZE, height);
+      state.ctx.putImageData(
+        state.pixels,
+        0, 0,
+        0, 0,
+        (frame + 1) * SIZE, height
+      );
       state.ctx.putImageData(
         state.pixels,
         SIZE, 0,
-        frame * SIZE, 0,
-        width - (frame * SIZE), height
+        (frame + (cloning ? 0 : 1)) * SIZE, 0,
+        width - ((frame + (cloning ? 0 : 1)) * SIZE), height
       );
       state.pixels = state.ctx.getImageData(0, 0, state.width, state.height);
       state.toBuffer().then((buffer) => {
+        this.$emit('texture', buffer);
         this.$emit('frames', {
           current: frame + 1,
           total: Math.floor(state.width / SIZE),
         });
-        this.$emit('texture', buffer);
       });
     },
     removeFrame() {
@@ -102,12 +112,11 @@ export default {
       );
       state.pixels = state.ctx.getImageData(0, 0, state.width, state.height);
       state.toBuffer().then((buffer) => {
-        const total = Math.floor(state.width / SIZE);
-        this.$emit('frames', {
-          current: Math.min(frame, total - 1),
-          total,
-        });
         this.$emit('texture', buffer);
+        this.$emit('frames', {
+          current: Math.max(frame - 1, 0),
+          total: Math.floor(state.width / SIZE),
+        });
       });
       this.render();
     },

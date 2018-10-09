@@ -6,6 +6,7 @@ export default {
     color: '#ffffff',
     frame: 0,
     frames: 0,
+    hasChanged: false,
     isEditingTitle: false,
     mesh: false,
     tool: 'paint',
@@ -18,16 +19,23 @@ export default {
       state.frame = 0;
       state.frames = 0;
       state.mesh = false;
+      state.hasChanged = false;
       state.isEditingTitle = false;
+    },
+    SAVED(state) {
+      state.hasChanged = false;
     },
     SET_BACKGROUND(state, bg) {
       state.mesh.bg = bg;
+      state.hasChanged = true;
     },
     SET_COLOR(state, color) {
       state.color = color;
+      state.hasChanged = true;
     },
     SET_FPS(state, fps) {
       state.mesh.fps = fps;
+      state.hasChanged = true;
     },
     STEP_FRAME(state, inc) {
       state.frame = (
@@ -46,10 +54,12 @@ export default {
     },
     SET_TEXTURE(state, texture) {
       state.mesh.texture = texture;
+      state.hasChanged = true;
     },
     SET_TITLE(state, title) {
       state.mesh.title = title;
       state.isEditingTitle = false;
+      state.hasChanged = true;
     },
     SET_TOOL(state, tool) {
       state.tool = tool;
@@ -97,6 +107,7 @@ export default {
     save({ commit, rootState, state }) {
       API.meshes.save(state.mesh)
         .then(({ data: id }) => {
+          commit('SAVED');
           if (id) commit('SET_ID', { id, creator: rootState.user.profile });
         })
         .catch(console.error);

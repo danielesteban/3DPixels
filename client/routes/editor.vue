@@ -25,6 +25,7 @@ export default {
       'color',
       'frame',
       'frames',
+      'hasChanged',
       'isEditingTitle',
       'mesh',
       'tool',
@@ -204,6 +205,7 @@ export default {
           @change="setBackground"
         >
         <button
+          :class="{ warning: hasChanged }"
           @click="save()"
         >
           <span v-if="isCreator">
@@ -362,6 +364,9 @@ export default {
       will-change: background-color, opacity;
       &.active, &:hover {
         background-color: #111;
+      }
+      &.warning {
+        background-color: #822;
       }
       &[disabled] {
         opacity: .5;

@@ -256,11 +256,13 @@ export default {
     font-size: 2.5em;
     margin: 2rem auto;
   }
+  .wrapper, .toolbar {
+    max-width: 1280px;
+  }
   .wrapper {
     display: flex;
     align-items: center;
     width: 100%;
-    max-width: 1280px;
     > div {
       width: 50%;
     }

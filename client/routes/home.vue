@@ -59,7 +59,7 @@ export default {
           </small>
         </span>
         <router-link :to="{ name: 'editor', params: { id: mesh._id } }">
-          &gt; edit
+          edit
         </router-link>
       </div>
     </div>
@@ -77,28 +77,28 @@ export default {
   }
   .mesh {
     margin: 1.5rem;
-    border: 2px solid #333;
+    border: 2px solid #222;
     width: 350px;
     .meta {
       display: flex;
-      border-top: 2px solid #333;
-      > span, > a {
-        white-space: nowrap;
-      }
+      justify-content: space-between;
+      border-top: 2px solid #222;
       > span {
-        padding-left: 1rem;
+        padding-left: 0.75rem;
         min-width: 0;
+        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        flex: 1 1 auto;
         > small {
           font-size: 0.75em;
         }
       }
       > a {
-        padding: 0 1rem 0 0.5rem;
+        background: rgba(0, 0, 0, .4);
+        padding: 0 0.75rem;
         color: inherit;
         text-decoration: none;
+        text-transform: uppercase;
         opacity: 0;
         transition: opacity ease-out .2s;
         will-change: opacity;

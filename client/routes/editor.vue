@@ -97,10 +97,10 @@ export default {
       ));
     },
     addFrame() {
-
+      this.$emit('addFrame');
     },
     removeFrame() {
-
+      this.$emit('removeFrame');
     },
     stepFrame(inc) {
       this.$store.dispatch('editor/stepFrame', inc);
@@ -182,7 +182,7 @@ export default {
             Save
           </span>
           <span v-else>
-            Save copy
+            Save as copy
           </span>
         </button>
       </div>
@@ -239,6 +239,7 @@ export default {
         </div>
       </div>
       <div class="single">
+        FPS:&nbsp;
         <input
           :value="mesh.fps"
           type="number"
@@ -281,12 +282,13 @@ export default {
     > div {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       width: 50%;
       > div {
         display: flex;
       }
       &.single {
-        justify-content: center;
+        justify-content: flex-end;
       }
     }
     &.bottom > div {
@@ -304,6 +306,8 @@ export default {
       background-color: #222;
       color: inherit;
       border: 2px solid #111;
+      border-top: 0;
+      border-bottom: 0;
       outline: 0;
       &:first-child {
         margin-left: 0;

@@ -31,10 +31,10 @@ export default {
     },
     submit({ target }) {
       const { isSignup } = this;
-      const name = target.name.value;
+      const name = target.name && target.name.value;
       const email = target.email.value;
       const password = target.password.value;
-      const confirmPassword = target.confirmPassword.value;
+      const confirmPassword = target.confirmPassword && target.confirmPassword.value;
       if (isSignup) {
         if (!name || !email || !password) return;
         if (password !== confirmPassword) return;

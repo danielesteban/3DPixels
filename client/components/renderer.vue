@@ -1,4 +1,5 @@
 <script>
+import fullscreen from 'fullscreen';
 import {
   Clock,
   FogExp2,
@@ -73,9 +74,10 @@ export default {
       const state = {};
       this.state = state;
       state.mount = mount;
-      state.camera = new PerspectiveCamera(80, 1, 1, 1024);
+      state.camera = new PerspectiveCamera(70, 1, 1, 1024);
       state.clock = new Clock();
       state.renderer = new WebGLRenderer({ antialias: true });
+      state.renderer.setPixelRatio(window.devicePixelRatio);
       state.scene = new Scene();
       state.scene.fog = new FogExp2(0, 0.01);
       state.tilt = new Object3D();
@@ -91,16 +93,16 @@ export default {
       state.ground = new Ground();
       state.scene.add(state.ground);
       this.setClearColor(mesh.bg);
-      state.pan.rotation.y = Math.PI * 0.1;
       state.tilt.rotation.x = Math.PI * -0.1;
 
       mount.appendChild(state.renderer.domElement);
-      state.renderer.setPixelRatio(window.devicePixelRatio);
       mount.addEventListener('contextmenu', e => e.preventDefault());
+      mount.addEventListener('dblclick', this.onDblClick);
       window.addEventListener('blur', this.onPointerUp, false);
       window.addEventListener('resize', this.onResize, false);
-      this.onResize();
+      state.fullscreen = fullscreen(mount);
       state.renderer.setAnimationLoop(this.onAnimate);
+      this.onResize();
 
       state.pointer = {
         active: false,
@@ -116,7 +118,9 @@ export default {
     destroy() {
       const {
         actor,
+        fullscreen,
         ground,
+        mount,
         renderer,
         touches,
       } = this.state;
@@ -125,6 +129,10 @@ export default {
       renderer.setAnimationLoop(null);
       renderer.dispose();
       renderer.forceContextLoss();
+      if (fullscreen.target() === mount) {
+        fullscreen.release();
+      }
+      fullscreen.dispose();
       touches.disable();
       window.removeEventListener('blur', this.onPointerUp);
       window.removeEventListener('resize', this.onResize);
@@ -151,6 +159,14 @@ export default {
       }
       renderer.render(scene, camera);
     },
+    onDblClick() {
+      const { fullscreen, mount } = this.state;
+      if (fullscreen.target() === mount) {
+        fullscreen.release();
+      } else {
+        fullscreen.request();
+      }
+    },
     onPointerDown(e) {
       const { pointer, mount } = this.state;
       if (
@@ -172,9 +188,20 @@ export default {
       pointer.active = false;
     },
     onResize() {
-      const { camera, mount, renderer } = this.state;
-      const { width } = mount.getBoundingClientRect();
-      renderer.setSize(width, width);
+      const {
+        camera,
+        fullscreen,
+        mount,
+        renderer,
+      } = this.state;
+      const { width, height } = mount.getBoundingClientRect();
+      if (fullscreen.target() === mount) {
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+      } else {
+        renderer.setSize(width, width);
+        camera.aspect = 1;
+      }
       camera.updateProjectionMatrix();
     },
     setClearColor(color) {

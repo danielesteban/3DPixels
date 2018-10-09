@@ -53,12 +53,43 @@ export default {
       .on('start', this.onPointerDown)
       .on('move', this.onPointerMove)
       .on('end', this.onPointerUp);
+    this.$parent.$on('addFrame', this.addFrame);
+    this.$parent.$on('removeFrame', this.removeFrame);
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize);
     this.touches.disable();
+    this.$parent.$off('addFrame', this.addFrame);
+    this.$parent.$off('removeFrame', this.removeFrame);
   },
   methods: {
+    addFrame() {
+      const {
+        image,
+        frame,
+      } = this;
+      const { width, height } = image;
+      image.width = width + SIZE;
+      image.ctx.putImageData(image.pixels, 0, 0, 0, 0, (frame + 1) * SIZE, height);
+      image.ctx.putImageData(
+        image.pixels,
+        SIZE, 0,
+        frame * SIZE, 0,
+        width - (frame * SIZE), height
+      );
+      image.pixels = image.ctx.getImageData(0, 0, image.width, image.height);
+      image.toBlob((blob) => {
+        const reader = new FileReader();
+        reader.addEventListener('loadend', () => {
+          this.$emit('frames', Math.floor(image.width / SIZE));
+          this.$emit('texture', reader.result);
+        });
+        reader.readAsArrayBuffer(blob);
+      }, 'image/png');
+    },
+    removeFrame() {
+      console.log('remove');
+    },
     load() {
       const img = new Image();
       img.onload = () => {

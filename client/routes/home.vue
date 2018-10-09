@@ -52,15 +52,17 @@ export default {
         :style="{ backgroundColor: $options.filters.hexColor(mesh.bg) }"
         class="meta"
       >
-        <span>
+        <div class="title">
           {{ mesh.title }}
-          <small>
-            by {{ mesh.creator.name }}
-          </small>
-        </span>
-        <router-link :to="{ name: 'editor', params: { id: mesh._id } }">
-          edit
-        </router-link>
+        </div>
+        <div class="creator">
+          by {{ mesh.creator.name }}
+        </div>
+        <div class="edit">
+          <router-link :to="{ name: 'editor', params: { id: mesh._id } }">
+            Edit
+          </router-link>
+        </div>
       </div>
     </div>
   </div>
@@ -81,31 +83,37 @@ export default {
     width: 350px;
     .meta {
       display: flex;
-      justify-content: space-between;
-      border-top: 2px solid #222;
-      > span {
-        padding-left: 0.75rem;
-        min-width: 0;
+      align-items: center;
+      overflow: hidden;
+      .title, .creator, .edit {
         white-space: nowrap;
+      }
+      .title {
+        flex-grow: 1;
         overflow: hidden;
+        white-space: nowrap;
         text-overflow: ellipsis;
-        > small {
-          font-size: 0.75em;
+        padding-left: 0.75rem;
+      }
+      .creator {
+        font-size: 0.75em;
+        padding: 0 0.75rem 0 0.5rem;
+      }
+      .edit {
+        display: flex;
+        width: 0;
+        transition: width ease-out .15s;
+        will-change: width;
+        > a {
+          background: rgba(0, 0, 0, .3);
+          padding: 0 0.75rem;
+          color: inherit;
+          text-decoration: none;
         }
       }
-      > a {
-        background: rgba(0, 0, 0, .4);
-        padding: 0 0.75rem;
-        color: inherit;
-        text-decoration: none;
-        text-transform: uppercase;
-        opacity: 0;
-        transition: opacity ease-out .2s;
-        will-change: opacity;
-      }
     }
-    &:hover .meta > a {
-      opacity: 1;
+    &:hover .meta .edit {
+      width: 66px;
     }
   }
 </style>

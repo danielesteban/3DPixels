@@ -6,14 +6,19 @@ export default {
     color: '#ffffff',
     frame: 0,
     frames: 0,
+    isEditingTitle: false,
     mesh: false,
     tool: 'paint',
   },
   mutations: {
+    EDIT_TITLE(state) {
+      state.isEditingTitle = true;
+    },
     RESET(state) {
       state.frame = 0;
       state.frames = 0;
       state.mesh = false;
+      state.isEditingTitle = false;
     },
     SET_BACKGROUND(state, bg) {
       state.mesh.bg = bg;
@@ -44,6 +49,7 @@ export default {
     },
     SET_TITLE(state, title) {
       state.mesh.title = title;
+      state.isEditingTitle = false;
     },
     SET_TOOL(state, tool) {
       state.tool = tool;
@@ -70,6 +76,9 @@ export default {
         });
         reader.readAsArrayBuffer(blob);
       }, 'image/png');
+    },
+    editTitle({ commit }) {
+      commit('EDIT_TITLE');
     },
     fetch({ commit }, id) {
       Promise.all([

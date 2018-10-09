@@ -25,6 +25,7 @@ export default {
       'color',
       'frame',
       'frames',
+      'isEditingTitle',
       'mesh',
       'tool',
     ]),
@@ -76,6 +77,14 @@ export default {
     fetch(id) {
       this.$store.dispatch('editor/fetch', id);
     },
+    editTitle() {
+      this.$store.dispatch('editor/editTitle');
+      this.$nextTick(() => {
+        const { titleInput } = this.$refs;
+        titleInput.select();
+        titleInput.focus();
+      });
+    },
     onColor(color) {
       this.$store.dispatch('editor/setColor', color);
       this.setTool('paint');
@@ -85,6 +94,11 @@ export default {
     },
     onTexture(texture) {
       this.$store.dispatch('editor/setTexture', texture);
+    },
+    onTitleInputKeydown({ keyCode, repeat, target }) {
+      if (keyCode === 13 && !repeat) {
+        this.setTitle({ target });
+      }
     },
     reset() {
       this.$store.dispatch('editor/reset');
@@ -136,7 +150,20 @@ export default {
     class="editor"
   >
     <div class="title">
-      {{ mesh.title }}
+      <input
+        v-if="isEditingTitle"
+        ref="titleInput"
+        :value="mesh.title"
+        type="text"
+        @keydown="onTitleInputKeydown"
+        @blur="setTitle"
+      >
+      <span
+        v-else
+        @click="editTitle"
+      >
+        {{ mesh.title }}
+      </span>
       <small v-if="mesh.creator">
         by {{ mesh.creator.name }}
       </small>
@@ -263,6 +290,18 @@ export default {
   .title {
     font-size: 2.5em;
     margin: 2rem auto;
+    > input {
+      width: 500px;
+      margin: 0;
+      padding: 0 1.5rem;
+      font-family: inherit;
+      color: inherit;
+      font-size: inherit;
+      height: 50px;
+      background-color: #222;
+      border: 2px solid #111;
+      outline: 0;
+    }
   }
   .wrapper, .toolbar {
     max-width: 1280px;
@@ -294,11 +333,8 @@ export default {
     &.bottom > div {
       width: 25%;
     }
-    .end {
-      justify-self: flex-end;
-    }
     button, input {
-      margin: 0 0.25rem;
+      margin: 0 0.1rem;
       padding: 0 1.5rem;
       font-size: 1.5em;
       font-family: inherit;

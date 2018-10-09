@@ -11,7 +11,7 @@ export default {
   name: 'Sprite',
   props: {
     background: {
-      type: String,
+      type: Number,
       required: true,
     },
     cloning: {
@@ -205,6 +205,13 @@ export default {
           break;
         default:
           auxColor.set(color);
+          {
+            const avg = (auxColor.r + auxColor.g + auxColor.b) / 3;
+            const entropy = avg * 0.05;
+            auxColor.r += (Math.random() * 2 - 1) * entropy;
+            auxColor.g += (Math.random() * 2 - 1) * entropy;
+            auxColor.b += (Math.random() * 2 - 1) * entropy;
+          }
           pixels[i] = auxColor.r * 0xFF;
           pixels[i + 1] = auxColor.g * 0xFF;
           pixels[i + 2] = auxColor.b * 0xFF;
@@ -236,7 +243,9 @@ export default {
       canvas.width = canvas.width;
       const ctx = canvas.getContext('2d');
       ctx.imageSmoothingEnabled = false;
-      ctx.fillStyle = background;
+      auxColor.set(background);
+      auxColor.offsetHSL(0, 0, -0.1);
+      ctx.fillStyle = `#${auxColor.getHexString()}`;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       const scale = canvas.width / SIZE;
       ctx.scale(scale, scale);

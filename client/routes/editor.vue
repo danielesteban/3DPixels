@@ -226,7 +226,7 @@ export default {
       <div>
         <Sprite
           v-if="mesh.texture"
-          :background="mesh.bg | hexColor"
+          :background="mesh.bg"
           :cloning="cloning"
           :color="color"
           :frame="frame"

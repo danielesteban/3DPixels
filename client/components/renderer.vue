@@ -78,7 +78,7 @@ export default {
       const state = {};
       this.state = state;
       state.mount = mount;
-      state.camera = new PerspectiveCamera(60, 1, 1, 1024);
+      state.camera = new PerspectiveCamera(64, 1, 1, 1024);
       state.clock = new Clock();
       state.renderer = new WebGLRenderer({ alpha: false, antialias: true });
       state.renderer.setPixelRatio(window.devicePixelRatio || 1);

@@ -12,11 +12,20 @@ export default {
 <template>
   <div>
     <Header />
-    <router-view />
+    <div class="route">
+      <router-view />
+    </div>
     <Footer />
     <Auth />
   </div>
 </template>
+
+<style lang="scss" scoped>
+  .route {
+    display: flex;
+    min-height: calc(100vh - 100px);
+  }
+</style>
 
 <style lang="scss">
   @font-face {

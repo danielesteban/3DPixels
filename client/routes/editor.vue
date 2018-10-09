@@ -287,7 +287,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 100px);
+    width: 100%;
     padding: 0 2rem;
   }
   .title {

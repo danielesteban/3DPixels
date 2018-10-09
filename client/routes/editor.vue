@@ -71,6 +71,7 @@ export default {
     },
     onColor(color) {
       this.$store.dispatch('editor/setColor', color);
+      this.setTool('paint');
     },
     onFrames(frames) {
       this.$store.dispatch('editor/setFrames', frames);
@@ -80,6 +81,13 @@ export default {
     },
     reset() {
       this.$store.dispatch('editor/reset');
+    },
+    save() {
+      this.$store.dispatch(!this.isAuth ? (
+        'user/showAuth'
+      ) : (
+        'editor/save'
+      ));
     },
     addFrame() {
 
@@ -108,26 +116,7 @@ export default {
     setTitle({ target: { value } }) {
       this.$store.dispatch('editor/setTitle', value);
     },
-    save() {
-      this.$store.dispatch(!this.isAuth ? (
-        'user/showAuth'
-      ) : (
-        'editor/save'
-      ));
-    },
-    swapTool() {
-      let tool;
-      switch (this.tool) {
-        case 'paint':
-          tool = 'erase';
-          break;
-        case 'erase':
-          tool = 'pick';
-          break;
-        default:
-          tool = 'paint';
-          break;
-      }
+    setTool(tool) {
       this.$store.dispatch('editor/setTool', tool);
     },
   },
@@ -145,10 +134,57 @@ export default {
         by {{ mesh.creator.name }}
       </small>
     </div>
+    <div class="toolbar">
+      <div>
+        <div>
+          <button
+            :class="{ active: tool === 'paint' }"
+            @click="setTool('paint')"
+          >
+            Paint
+          </button>
+          <button
+            :class="{ active: tool === 'erase' }"
+            @click="setTool('erase')"
+          >
+            Erase
+          </button>
+          <button
+            :class="{ active: tool === 'pick' }"
+            @click="setTool('pick')"
+          >
+            Pick
+          </button>
+        </div>
+        <input
+          :value="color"
+          type="color"
+          @change="setColor"
+        >
+      </div>
+      <div>
+        <input
+          :value="mesh.bg | hexColor"
+          type="color"
+          @change="setBackground"
+        >
+        <button
+          @click="save()"
+        >
+          <span v-if="isCreator">
+            Save
+          </span>
+          <span v-else>
+            Save copy
+          </span>
+        </button>
+      </div>
+    </div>
     <div class="wrapper">
       <div>
         <Sprite
           v-if="mesh.texture"
+          :background="mesh.bg | hexColor"
           :color="color"
           :frame="frame"
           :texture="mesh.texture"
@@ -157,80 +193,51 @@ export default {
           @frames="onFrames"
           @texture="onTexture"
         />
-        <div class="controls">
-          <div>
-            <input
-              :value="color"
-              type="color"
-              @change="setColor"
-            >
-            <button
-              @click="swapTool()"
-            >
-              {{ tool }}
-            </button>
-          </div>
-          <div>
-            <button
-              :disabled="frame <= 0"
-              @click="stepFrame(-1)"
-            >
-              &nbsp;&laquo;&nbsp;
-            </button>
-            <button
-              :disabled="frame >= frames - 1"
-              @click="stepFrame(1)"
-            >
-              &nbsp;&raquo;&nbsp;
-            </button>
-          </div>
-          <div>
-            <button
-              @click="addFrame()"
-            >
-              &plus;
-            </button>
-            <button
-              :disabled="frames <= 1"
-              @click="removeFrame()"
-            >
-              &times;
-            </button>
-          </div>
-        </div>
       </div>
       <div>
         <Renderer
           v-if="mesh.texture"
           :mesh="mesh"
         />
-        <div class="controls">
-          <div>
-            <input
-              :value="mesh.bg | hexColor"
-              type="color"
-              @change="setBackground"
-            >
-            <input
-              :value="mesh.fps"
-              type="number"
-              min="1"
-              @change="setFps"
-            >
-          </div>
-          <div>
-            <button
-              @click="save()"
-            >
-              <span v-if="isCreator">
-                Save
-              </span>
-              <span v-else>
-                Save copy
-              </span>
-            </button>
-          </div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div>
+        <div>
+          <button
+            :disabled="frame <= 0"
+            @click="stepFrame(-1)"
+          >
+            &nbsp;&laquo;&nbsp;
+          </button>
+          <button
+            :disabled="frame >= frames - 1"
+            @click="stepFrame(1)"
+          >
+            &nbsp;&raquo;&nbsp;
+          </button>
         </div>
+        <div>
+          <button
+            @click="addFrame()"
+          >
+            &plus;
+          </button>
+          <button
+            :disabled="frames <= 1"
+            @click="removeFrame()"
+          >
+            &times;
+          </button>
+        </div>
+      </div>
+      <div class="single">
+        <input
+          :value="mesh.fps"
+          type="number"
+          min="1"
+          @change="setFps"
+        >
       </div>
     </div>
   </div>
@@ -258,11 +265,26 @@ export default {
       width: 50%;
     }
   }
-  .controls {
-    padding: 1rem 0 2rem;
-    justify-content: space-between;
-    &, > div {
+  .toolbar {
+    display: flex;
+    width: 100%;
+    background: #222;
+    > div {
       display: flex;
+      justify-content: space-between;
+      width: 50%;
+      > div {
+        display: flex;
+      }
+      &.single {
+        justify-content: center;
+      }
+    }
+    &.bottom > div {
+      width: 25%;
+    }
+    .end {
+      justify-self: flex-end;
     }
     button, input {
       margin: 0 0.25rem;
@@ -270,17 +292,30 @@ export default {
       font-size: 1.5em;
       font-family: inherit;
       height: 50px;
-      background: #222;
+      background-color: #222;
       color: inherit;
       border: 2px solid #111;
       outline: 0;
+      &:first-child {
+        margin-left: 0;
+      }
+      &:last-child {
+        margin-right: 0;
+      }
     }
     button {
       cursor: pointer;
-      text-transform: capitalize;
+      transition: background-color ease-out .15s, opacity ease-out .15s;
+      will-change: background-color, opacity;
+      &.active, &:hover {
+        background-color: #111;
+      }
       &[disabled] {
-        opacity: .75;
+        opacity: .5;
         cursor: default;
+        &:hover {
+          background-color: #222;
+        }
       }
     }
     input {

@@ -73,7 +73,7 @@ export default {
       const state = {};
       this.state = state;
       state.mount = mount;
-      state.camera = new PerspectiveCamera(74, 1, 1, 1024);
+      state.camera = new PerspectiveCamera(80, 1, 1, 1024);
       state.clock = new Clock();
       state.renderer = new WebGLRenderer({ antialias: true });
       state.scene = new Scene();

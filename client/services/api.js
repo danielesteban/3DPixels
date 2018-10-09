@@ -33,16 +33,16 @@ const API = {
     },
     save({
       _id,
-      name,
       bg,
       fps,
       texture,
+      title,
     }) {
       const data = new FormData();
-      data.append('name', name);
       data.append('bg', bg);
       data.append('fps', fps);
       data.append('texture', new Blob([texture], { type: 'image/png' }));
+      data.append('title', title);
       return client.put(`meshes/${_id || ''}`, data);
     },
     texture(id) {

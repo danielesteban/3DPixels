@@ -10,6 +10,10 @@ const auxColor = new Color();
 export default {
   name: 'Sprite',
   props: {
+    background: {
+      type: String,
+      required: true,
+    },
     color: {
       type: String,
       required: true,
@@ -28,6 +32,9 @@ export default {
     },
   },
   watch: {
+    background() {
+      this.render();
+    },
     frame() {
       this.render();
       delete this.lastPixel;
@@ -148,10 +155,17 @@ export default {
     },
     render() {
       if (!this.image) return;
-      const { $refs: { canvas }, frame, image } = this;
+      const {
+        background,
+        $refs: { canvas },
+        frame,
+        image,
+      } = this;
       canvas.width = canvas.width;
       const ctx = canvas.getContext('2d');
       ctx.imageSmoothingEnabled = false;
+      ctx.fillStyle = background;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
       const scale = canvas.width / SIZE;
       ctx.scale(scale, scale);
       ctx.drawImage(image, frame * SIZE, 0, SIZE, SIZE, 0, 0, SIZE, SIZE);

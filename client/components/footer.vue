@@ -11,7 +11,16 @@ export default {
 
 <template>
   <div class="footer">
-    3DPixels &middot;&nbsp;
+    3DPixels &middot;
+    This site is&nbsp;
+    <a
+      href="https://github.com/danielesteban/3DPixels"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      free software
+    </a>
+    &nbsp;&middot;&nbsp;
     <a
       href="https://dani.gatunes.com"
       rel="noopener noreferrer"
@@ -32,7 +41,6 @@ export default {
     color: #ccc;
     > a {
       color: inherit;
-      text-decoration: none;
     }
   }
 </style>

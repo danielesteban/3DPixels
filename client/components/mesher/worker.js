@@ -141,7 +141,7 @@ const getMesh = (frames) => {
   };
 };
 
-/* eslint-disable no-restricted-globals */
+// eslint-disable-next-line no-restricted-globals
 self.onmessage = ({ data: { buffer } }) => {
   decode(buffer)
     .then(getFrames)
@@ -152,6 +152,7 @@ self.onmessage = ({ data: { buffer } }) => {
       index,
       frames,
     }) => {
+      // eslint-disable-next-line no-restricted-globals
       self.postMessage({
         position,
         color,

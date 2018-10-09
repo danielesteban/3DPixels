@@ -62,6 +62,13 @@ export default {
   beforeDestroy() {
     this.reset();
   },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    this.reset();
+    if (!id) this.create();
+    else this.fetch(id);
+    next();
+  },
   methods: {
     create() {
       this.$store.dispatch('editor/create');

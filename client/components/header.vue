@@ -8,8 +8,8 @@ export default {
       'isAuth',
       'profile',
     ]),
-    isEditorRoute() {
-      return this.$route.name === 'editor';
+    isCreating() {
+      return this.$route.name === 'editor' && !this.$route.params.id;
     },
   },
   methods: {
@@ -32,7 +32,7 @@ export default {
     </div>
     <div class="actions">
       <router-link
-        v-if="!isEditorRoute"
+        v-if="!isCreating"
         :to="{ name: 'editor' }"
       >
         Create

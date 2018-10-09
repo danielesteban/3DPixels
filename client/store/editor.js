@@ -6,14 +6,14 @@ export default {
     color: '#ffffff',
     frame: 0,
     frames: 0,
-    mesh: {},
+    mesh: false,
     tool: 'paint',
   },
   mutations: {
     RESET(state) {
       state.frame = 0;
       state.frames = 0;
-      state.mesh = {};
+      state.mesh = false;
     },
     SET_BACKGROUND(state, bg) {
       state.mesh.bg = bg;
@@ -37,7 +37,7 @@ export default {
       state.mesh.creator = creator;
     },
     SET_MESH(state, mesh) {
-      state.mesh = mesh || {};
+      state.mesh = mesh || false;
     },
     SET_TEXTURE(state, texture) {
       state.mesh.texture = texture;

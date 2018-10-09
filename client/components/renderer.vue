@@ -80,7 +80,7 @@ export default {
       state.mount = mount;
       state.camera = new PerspectiveCamera(70, 1, 1, 1024);
       state.clock = new Clock();
-      state.renderer = new WebGLRenderer({ antialias: true });
+      state.renderer = new WebGLRenderer({ alpha: false, antialias: true });
       state.renderer.setPixelRatio(window.devicePixelRatio || 1);
       state.scene = new Scene();
       state.scene.fog = new FogExp2(0, 0.01);

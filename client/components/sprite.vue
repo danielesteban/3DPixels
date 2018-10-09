@@ -37,10 +37,10 @@ export default {
     },
     frame() {
       this.render();
-      delete this.lastPixel;
+      delete this.state.lastPixel;
     },
     tool() {
-      delete this.lastPixel;
+      delete this.state.lastPixel;
     },
   },
   mounted() {
@@ -65,42 +65,77 @@ export default {
   methods: {
     addFrame() {
       const {
-        image,
         frame,
+        state,
       } = this;
-      const { width, height } = image;
-      image.width = width + SIZE;
-      image.ctx.putImageData(image.pixels, 0, 0, 0, 0, (frame + 1) * SIZE, height);
-      image.ctx.putImageData(
-        image.pixels,
+      const { width, height } = state;
+      state.width = width + SIZE;
+      state.ctx.putImageData(state.pixels, 0, 0, 0, 0, (frame + 1) * SIZE, height);
+      state.ctx.putImageData(
+        state.pixels,
         SIZE, 0,
         frame * SIZE, 0,
         width - (frame * SIZE), height
       );
-      image.pixels = image.ctx.getImageData(0, 0, image.width, image.height);
-      image.toBlob((blob) => {
-        const reader = new FileReader();
-        reader.addEventListener('loadend', () => {
-          this.$emit('frames', Math.floor(image.width / SIZE));
-          this.$emit('texture', reader.result);
+      state.pixels = state.ctx.getImageData(0, 0, state.width, state.height);
+      state.toBuffer().then((buffer) => {
+        this.$emit('frames', {
+          current: frame + 1,
+          total: Math.floor(state.width / SIZE),
         });
-        reader.readAsArrayBuffer(blob);
-      }, 'image/png');
+        this.$emit('texture', buffer);
+      });
     },
     removeFrame() {
-      console.log('remove');
+      const {
+        frame,
+        state,
+      } = this;
+      const { width, height } = state;
+      state.width = width - SIZE;
+      state.ctx.putImageData(state.pixels, 0, 0, 0, 0, frame * SIZE, height);
+      state.ctx.putImageData(
+        state.pixels,
+        -SIZE, 0,
+        (frame + 1) * SIZE, 0,
+        width - ((frame + 1) * SIZE), height
+      );
+      state.pixels = state.ctx.getImageData(0, 0, state.width, state.height);
+      state.toBuffer().then((buffer) => {
+        const total = Math.floor(state.width / SIZE);
+        this.$emit('frames', {
+          current: Math.min(frame, total - 1),
+          total,
+        });
+        this.$emit('texture', buffer);
+      });
+      this.render();
     },
     load() {
       const img = new Image();
       img.onload = () => {
-        const image = document.createElement('canvas');
-        image.width = img.width;
-        image.height = img.height;
-        image.ctx = image.getContext('2d');
-        image.ctx.drawImage(img, 0, 0);
-        image.pixels = image.ctx.getImageData(0, 0, image.width, image.height);
-        this.image = image;
-        this.$emit('frames', Math.floor(image.width / SIZE));
+        const state = document.createElement('canvas');
+        state.width = img.width;
+        state.height = img.height;
+        state.ctx = state.getContext('2d');
+        state.ctx.drawImage(img, 0, 0);
+        state.pixels = state.ctx.getImageData(0, 0, state.width, state.height);
+        state.toBuffer = () => (
+          new Promise(resolve => (
+            state.toBlob((blob) => {
+              const reader = new FileReader();
+              reader.addEventListener('loadend', () => {
+                resolve(reader.result);
+              });
+              reader.readAsArrayBuffer(blob);
+            }, 'image/png')
+          ))
+        );
+        this.state = state;
+        this.$emit('frames', {
+          current: 0,
+          total: Math.floor(state.width / SIZE),
+        });
         this.render();
       };
       const blob = new Blob([this.texture], { type: 'image/png' });
@@ -121,58 +156,55 @@ export default {
         $refs: { canvas },
         color,
         frame,
-        image,
-        lastPixel,
+        state,
         tool,
       } = this;
-      if (this.drawing) {
-        if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) {
-          return;
-        }
-        x = Math.floor(x * SIZE / canvas.width);
-        y = Math.floor(y * SIZE / canvas.width);
-        const i = ((y * image.width) + (frame * SIZE) + x) * 4;
-        if (lastPixel === i) {
-          return;
-        }
-        this.lastPixel = i;
-        const { pixels: { data: pixels } } = image;
-        switch (tool) {
-          case 'pick':
-            if (pixels[i + 3] >= 0X80) {
-              const r = pixels[i];
-              const g = pixels[i + 1];
-              const b = pixels[i + 2];
-              auxColor.r = r / 0xFF;
-              auxColor.g = g / 0xFF;
-              auxColor.b = b / 0xFF;
-              this.$emit('color', `#${auxColor.getHexString()}`);
-            }
-            return;
-          case 'erase':
-            pixels[i] = 0;
-            pixels[i + 1] = 0;
-            pixels[i + 2] = 0;
-            pixels[i + 3] = 0;
-            break;
-          default:
-            auxColor.set(color);
-            pixels[i] = auxColor.r * 0xFF;
-            pixels[i + 1] = auxColor.g * 0xFF;
-            pixels[i + 2] = auxColor.b * 0xFF;
-            pixels[i + 3] = 0xFF;
-            break;
-        }
-        image.ctx.putImageData(image.pixels, 0, 0);
-        image.toBlob((blob) => {
-          const reader = new FileReader();
-          reader.addEventListener('loadend', () => {
-            this.$emit('texture', reader.result);
-          });
-          reader.readAsArrayBuffer(blob);
-        }, 'image/png');
-        this.render();
+      if (
+        !this.drawing
+        || x < 0
+        || y < 0
+        || x >= canvas.width
+        || y >= canvas.height
+      ) {
+        return;
       }
+      x = Math.floor(x * SIZE / canvas.width);
+      y = Math.floor(y * SIZE / canvas.width);
+      const i = ((y * state.width) + (frame * SIZE) + x) * 4;
+      if (state.lastPixel === i) {
+        return;
+      }
+      state.lastPixel = i;
+      const { pixels: { data: pixels } } = state;
+      switch (tool) {
+        case 'pick':
+          if (pixels[i + 3] >= 0X80) {
+            const r = pixels[i];
+            const g = pixels[i + 1];
+            const b = pixels[i + 2];
+            auxColor.r = r / 0xFF;
+            auxColor.g = g / 0xFF;
+            auxColor.b = b / 0xFF;
+            this.$emit('color', `#${auxColor.getHexString()}`);
+          }
+          return;
+        case 'erase':
+          pixels[i] = 0;
+          pixels[i + 1] = 0;
+          pixels[i + 2] = 0;
+          pixels[i + 3] = 0;
+          break;
+        default:
+          auxColor.set(color);
+          pixels[i] = auxColor.r * 0xFF;
+          pixels[i + 1] = auxColor.g * 0xFF;
+          pixels[i + 2] = auxColor.b * 0xFF;
+          pixels[i + 3] = 0xFF;
+          break;
+      }
+      state.ctx.putImageData(state.pixels, 0, 0);
+      state.toBuffer().then(buffer => this.$emit('texture', buffer));
+      this.render();
     },
     onPointerUp() {
       this.drawing = false;
@@ -185,12 +217,12 @@ export default {
       this.render();
     },
     render() {
-      if (!this.image) return;
+      if (!this.state) return;
       const {
         background,
         $refs: { canvas },
         frame,
-        image,
+        state,
       } = this;
       canvas.width = canvas.width;
       const ctx = canvas.getContext('2d');
@@ -199,7 +231,7 @@ export default {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       const scale = canvas.width / SIZE;
       ctx.scale(scale, scale);
-      ctx.drawImage(image, frame * SIZE, 0, SIZE, SIZE, 0, 0, SIZE, SIZE);
+      ctx.drawImage(state, frame * SIZE, 0, SIZE, SIZE, 0, 0, SIZE, SIZE);
       ctx.beginPath();
       for (let x = 0; x <= SIZE; x += 1) {
         ctx.moveTo(x, 0);

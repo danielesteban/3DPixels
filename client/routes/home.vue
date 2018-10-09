@@ -75,7 +75,7 @@ export default {
     padding: 1.5rem;
     justify-content: center;
     margin: 0 auto;
-    max-width: 1920px;
+    max-width: 1648px;
   }
   .mesh {
     margin: 1.5rem;

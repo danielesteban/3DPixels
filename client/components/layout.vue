@@ -1,10 +1,11 @@
 <script>
 import Auth from './auth';
+import Footer from './footer';
 import Header from './header';
 
 export default {
   name: 'Layout',
-  components: { Auth, Header },
+  components: { Auth, Footer, Header },
 };
 </script>
 
@@ -12,6 +13,7 @@ export default {
   <div>
     <Header />
     <router-view />
+    <Footer />
     <Auth />
   </div>
 </template>

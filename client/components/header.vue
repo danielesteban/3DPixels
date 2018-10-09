@@ -25,36 +25,38 @@ export default {
 
 <template>
   <div class="header">
-    <div class="nav">
-      <router-link :to="{ name: 'home' }">
-        3DPixels
-      </router-link>
-    </div>
-    <div class="actions">
-      <router-link
-        v-if="!isCreating"
-        :to="{ name: 'editor' }"
-      >
-        Create
-      </router-link>
-      <div
-        v-if="isAuth"
-        class="dropdown"
-      >
-        <div class="toggle">
-          {{ profile.name }}
-          <i>&gt;</i>
-        </div>
-        <div class="content">
-          <a @click="signOut">Sign-Out</a>
-        </div>
+    <div>
+      <div class="nav">
+        <router-link :to="{ name: 'home' }">
+          3DPixels
+        </router-link>
       </div>
-      <button
-        v-else
-        @click="signIn"
-      >
-        Sign-In
-      </button>
+      <div class="actions">
+        <router-link
+          v-if="!isCreating"
+          :to="{ name: 'editor' }"
+        >
+          Create
+        </router-link>
+        <div
+          v-if="isAuth"
+          class="dropdown"
+        >
+          <div class="toggle">
+            {{ profile.name }}
+            <i>&gt;</i>
+          </div>
+          <div class="content">
+            <a @click="signOut">Sign-Out</a>
+          </div>
+        </div>
+        <button
+          v-else
+          @click="signIn"
+        >
+          Sign-In
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -62,13 +64,19 @@ export default {
 <style lang="scss" scoped>
   .header {
     background: #222;
-    padding: 0 1rem;
-    height: 50px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     > div {
+      max-width: 1600px;
+      padding: 0 1.75rem;
+      width: 100%;
+      height: 50px;
       display: flex;
-      align-items: center;
+      justify-content: space-between;
+      > div {
+        display: flex;
+        align-items: center;
+      }
     }
   }
   .nav > a {

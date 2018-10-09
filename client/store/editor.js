@@ -42,8 +42,9 @@ export default {
         Math.min(Math.max(state.frame + inc, 0), state.frames - 1)
       );
     },
-    SET_FRAMES(state, frames) {
-      state.frames = frames;
+    SET_FRAMES(state, { current, total }) {
+      state.frame = current;
+      state.frames = total;
     },
     SET_ID(state, { id, creator }) {
       state.mesh._id = id;
@@ -79,7 +80,7 @@ export default {
             _id: false,
             creator: rootState.user.isAuth ? rootState.user.profile : false,
             bg: 0x555555,
-            fps: 3,
+            fps: 2,
             texture: reader.result,
             title: 'Untitled',
           });

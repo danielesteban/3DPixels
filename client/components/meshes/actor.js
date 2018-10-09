@@ -17,6 +17,7 @@ class Actor extends Mesh {
     );
 
     this.fps = fps;
+    this.frame = 0;
     this.lastTick = 0;
     this.visible = false;
 
@@ -28,8 +29,7 @@ class Actor extends Mesh {
         frames,
       }) => {
         this.frames = frames;
-        this.frame = 0;
-        const [frame] = frames;
+        const frame = frames[this.frame];
         this.geometry.setDrawRange(frame.start, frame.count);
         this.geometry.setIndex(new BufferAttribute(index, 1));
         this.geometry.addAttribute('position', new BufferAttribute(position, 3));

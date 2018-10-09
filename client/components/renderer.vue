@@ -57,8 +57,12 @@ export default {
     },
     'mesh.texture': function watchTexture() {
       const { actor, scene } = this.state;
+      // TODO: Reuse actor
       scene.remove(actor);
+      actor.geometry.dispose();
       this.state.actor = new Actor(this.mesh);
+      this.state.actor.frame = actor.frame;
+      this.state.actor.lastTick = actor.lastTick;
       scene.add(this.state.actor);
     },
   },

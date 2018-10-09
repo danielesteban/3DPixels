@@ -1,0 +1,18 @@
+language: node_js
+node_js: lts/*
+cache:
+  yarn: true
+  directories:
+  - node_modules
+env:
+  global:
+  - API_URL=https://projects.gatunes.com/3dpixels/
+script:
+- yarn lint
+- yarn build
+deploy:
+  on:
+    branch: master
+  provider: script
+  script: yarn deploy:travis -r https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git
+  skip_cleanup: true

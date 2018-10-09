@@ -1,0 +1,16 @@
+version: '3'
+services:
+  node:
+    build: .
+    restart: always
+    environment:
+     - MONGO_URI=mongodb://mongo/3dpixels
+     - API_SECRET=superunsecuresecret
+    links:
+     - mongo
+    ports:
+     - "127.0.0.1:8081:8081"
+  mongo:
+    image: mongo:latest
+     - "db/config:/data/configdb"
+     - "db/data:/data/db"

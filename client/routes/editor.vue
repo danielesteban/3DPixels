@@ -78,6 +78,7 @@ export default {
       this.$store.dispatch('editor/fetch', id);
     },
     editTitle() {
+      if (!this.isCreator) return;
       this.$store.dispatch('editor/editTitle');
       this.$nextTick(() => {
         const { titleInput } = this.$refs;
@@ -289,7 +290,7 @@ export default {
   }
   .title {
     font-size: 2.5em;
-    margin: 2rem auto;
+    margin: 2rem auto 2.5rem;
     > input {
       width: 500px;
       margin: 0;
@@ -301,6 +302,9 @@ export default {
       background-color: #222;
       border: 2px solid #111;
       outline: 0;
+    }
+    > small {
+      font-size: 0.75em;
     }
   }
   .wrapper, .toolbar {

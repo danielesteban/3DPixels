@@ -14,10 +14,6 @@ export default {
       type: Number,
       required: true,
     },
-    cloning: {
-      type: Boolean,
-      required: true,
-    },
     color: {
       type: String,
       required: true,
@@ -67,9 +63,8 @@ export default {
     this.$parent.$off('removeFrame', this.removeFrame);
   },
   methods: {
-    addFrame() {
+    addFrame(clone = false) {
       const {
-        cloning,
         frame,
         state,
       } = this;
@@ -84,8 +79,8 @@ export default {
       state.ctx.putImageData(
         state.pixels,
         SIZE, 0,
-        (frame + (cloning ? 0 : 1)) * SIZE, 0,
-        width - ((frame + (cloning ? 0 : 1)) * SIZE), height
+        (frame + (clone ? 0 : 1)) * SIZE, 0,
+        width - ((frame + (clone ? 0 : 1)) * SIZE), height
       );
       state.pixels = state.ctx.getImageData(0, 0, state.width, state.height);
       state.toBuffer().then((buffer) => {

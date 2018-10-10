@@ -4,7 +4,6 @@ export default {
   namespaced: true,
   state: {
     color: '#aaaaaa',
-    cloning: true,
     frame: 0,
     frames: 0,
     hasChanged: false,
@@ -67,9 +66,6 @@ export default {
     },
     SET_TOOL(state, tool) {
       state.tool = tool;
-    },
-    TOGGLE_CLONING(state) {
-      state.cloning = !state.cloning;
     },
   },
   actions: {
@@ -142,9 +138,6 @@ export default {
     },
     setTool({ commit }, tool) {
       commit('SET_TOOL', tool);
-    },
-    toggleCloning({ commit }) {
-      commit('TOGGLE_CLONING');
     },
   },
 };

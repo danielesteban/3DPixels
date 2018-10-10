@@ -22,7 +22,6 @@ export default {
   },
   computed: {
     ...mapState('editor', [
-      'cloning',
       'color',
       'frame',
       'frames',
@@ -113,8 +112,8 @@ export default {
         'editor/save'
       ));
     },
-    addFrame() {
-      this.$emit('addFrame');
+    addFrame(clone) {
+      this.$emit('addFrame', clone);
     },
     removeFrame() {
       this.$emit('removeFrame');
@@ -143,9 +142,6 @@ export default {
     setTool(tool) {
       this.$store.dispatch('editor/setTool', tool);
     },
-    toggleCloning() {
-      this.$store.dispatch('editor/toggleCloning');
-    },
   },
 };
 </script>
@@ -167,7 +163,7 @@ export default {
       >
       <span
         v-else
-        @click="editTitle"
+        @click="editTitle()"
       >
         {{ mesh.title }}
       </span>
@@ -227,7 +223,6 @@ export default {
         <Sprite
           v-if="mesh.texture"
           :background="mesh.bg"
-          :cloning="cloning"
           :color="color"
           :frame="frame"
           :texture="mesh.texture"
@@ -261,15 +256,11 @@ export default {
           </button>
         </div>
         <div>
-          <label>
-            <input
-              :checked="cloning"
-              type="checkbox"
-              @click.prevent="toggleCloning"
-            >
-            <span v-if="cloning">Clone</span>
-            <span v-else>Blank</span>
-          </label>
+          <button
+            @click="addFrame(true)"
+          >
+            Clone
+          </button>
           <button
             @click="addFrame()"
           >

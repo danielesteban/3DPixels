@@ -94,10 +94,11 @@ export default {
 
       mount.appendChild(state.renderer.domElement);
       mount.addEventListener('contextmenu', e => e.preventDefault());
-      mount.addEventListener('dblclick', this.onDblClick);
+      mount.addEventListener('dblclick', this.requestFullscreen);
       window.addEventListener('blur', this.onPointerUp, false);
       window.addEventListener('resize', this.onResize, false);
       state.fullscreen = fullscreen(mount);
+      this.$parent.$on('fullscreen', this.requestFullscreen);
       state.renderer.setAnimationLoop(this.onAnimate);
       this.onResize();
 
@@ -126,6 +127,7 @@ export default {
       renderer.setAnimationLoop(null);
       renderer.dispose();
       renderer.forceContextLoss();
+      this.$parent.$off('fullscreen', this.requestFullscreen);
       if (fullscreen.target() === mount) {
         fullscreen.release();
       }
@@ -156,14 +158,6 @@ export default {
         pointer.movement.y = 0;
       }
       renderer.render(scene, camera);
-    },
-    onDblClick() {
-      const { fullscreen, mount } = this.state;
-      if (fullscreen.target() === mount) {
-        fullscreen.release();
-      } else {
-        fullscreen.request();
-      }
     },
     onPointerDown(e) {
       const { pointer, mount } = this.state;
@@ -201,6 +195,14 @@ export default {
         camera.aspect = 1;
       }
       camera.updateProjectionMatrix();
+    },
+    requestFullscreen() {
+      const { fullscreen, mount } = this.state;
+      if (fullscreen.target() === mount) {
+        fullscreen.release();
+      } else {
+        fullscreen.request();
+      }
     },
     setClearColor(color) {
       const { ground, renderer, scene: { fog } } = this.state;

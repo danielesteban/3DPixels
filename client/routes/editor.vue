@@ -81,6 +81,9 @@ export default {
     fetch(id) {
       this.$store.dispatch('editor/fetch', id);
     },
+    fullscreen() {
+      this.$emit('fullscreen');
+    },
     editTitle() {
       if (!this.isCreator) return;
       this.$store.dispatch('editor/editTitle');
@@ -206,6 +209,16 @@ export default {
     <div class="toolbar">
       <div>
         <div>
+          <span>&nbsp;Brush:</span>
+          <input
+            :value="brush"
+            type="number"
+            min="1"
+            max="10"
+            @change="setBrush"
+          >
+        </div>
+        <div>
           <button
             :class="{ active: tool === 'paint' }"
             @click="setTool('paint')"
@@ -218,46 +231,43 @@ export default {
           >
             Erase
           </button>
+        </div>
+        <div>
           <button
             :class="{ active: tool === 'pick' }"
             @click="setTool('pick')"
           >
             Pick
           </button>
-        </div>
-        <div>
-          &nbsp;Brush:&nbsp;
           <input
-            :value="brush"
-            type="number"
-            min="1"
-            max="10"
-            @change="setBrush"
+            :value="color"
+            type="color"
+            @change="setColor"
           >
         </div>
-        <input
-          :value="color"
-          type="color"
-          @change="setColor"
-        >
       </div>
       <div>
-        <input
-          :value="mesh.bg | hexColor"
-          type="color"
-          @change="setBackground"
-        >
-        <button
-          :class="{ warning: hasChanged }"
-          @click="save()"
-        >
-          <span v-if="isCreator">
-            Save
-          </span>
-          <span v-else>
-            Save as copy
-          </span>
-        </button>
+        <div>
+          <input
+            :value="mesh.bg | hexColor"
+            type="color"
+            @change="setBackground"
+          >
+        </div>
+        <div>
+          <button
+            :class="{ warning: hasChanged }"
+            :disabled="mesh._id && isCreator && !hasChanged"
+            @click="save()"
+          >
+            <span v-if="isCreator">
+              Save
+            </span>
+            <span v-else>
+              Save as copy
+            </span>
+          </button>
+        </div>
       </div>
     </div>
     <div class="wrapper">
@@ -317,15 +327,22 @@ export default {
           </button>
         </div>
       </div>
-      <div class="single">
+      <div>
         <div>
-          FPS:&nbsp;
+          <span>&nbsp;FPS:</span>
           <input
             :value="mesh.fps"
             type="number"
             min="1"
             @change="setFps"
           >
+        </div>
+        <div>
+          <button
+            @click="fullscreen"
+          >
+            Fullscreen
+          </button>
         </div>
       </div>
     </div>
@@ -375,26 +392,27 @@ export default {
     display: flex;
     width: 100%;
     background: #222;
+    font-size: 1.25em;
     > div {
       display: flex;
       justify-content: space-between;
       width: 50%;
+      &:first-child {
+        border-right: 1px solid #111;
+      }
+      &:last-child {
+        border-left: 1px solid #111;
+      }
       > div {
         display: flex;
         align-items: center;
       }
-      &.single {
-        justify-content: flex-end;
-      }
-    }
-    &.bottom > div {
-      width: 25%;
     }
     button, input {
       margin: 0 0.1rem;
       padding: 0 1.5rem;
-      font-size: 1.5em;
       font-family: inherit;
+      font-size: inherit;
       height: 50px;
       background-color: #222;
       color: inherit;
@@ -414,7 +432,7 @@ export default {
       transition: background-color ease-out .15s, opacity ease-out .15s;
       will-change: background-color, opacity;
       &.active, &:hover {
-        background-color: #111;
+        background-color: #333;
       }
       &.warning {
         background-color: #822;
@@ -433,6 +451,29 @@ export default {
       &[type=color] {
         padding: 0;
         cursor: pointer;
+      }
+      &[type=number] {
+        width: 3.25rem;
+        border-left: 0;
+        &::-webkit-inner-spin-button,
+        &::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+      }
+    }
+    > div > div:first-child {
+      button, input {
+        &:first-child {
+          border-left: 0;
+        }
+      }
+    }
+    > div > div:last-child {
+      button, input {
+        &:last-child {
+          border-right: 0;
+        }
       }
     }
   }

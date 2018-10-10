@@ -61,9 +61,6 @@ export default {
         <span class="creator">
           by {{ mesh.creator.name }}
         </span>
-        <span class="edit">
-          <span>Edit</span>
-        </span>
       </router-link>
     </div>
   </div>
@@ -89,7 +86,7 @@ export default {
       color: inherit;
       text-decoration: none;
       overflow: hidden;
-      .title, .creator, .edit {
+      .title, .creator {
         white-space: nowrap;
       }
       .title {
@@ -103,18 +100,6 @@ export default {
         font-size: 0.75em;
         padding: 0 0.75rem 0 0.5rem;
       }
-      .edit {
-        background: rgba(0, 0, 0, .3);
-        width: 0;
-        transition: width ease-out .15s;
-        will-change: width;
-        > span {
-          padding: 0 0.75rem;
-        }
-      }
-    }
-    &:hover .meta .edit {
-      width: 66px;
     }
   }
 </style>

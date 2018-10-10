@@ -14,6 +14,10 @@ export default {
       type: Number,
       required: true,
     },
+    brush: {
+      type: Number,
+      required: true,
+    },
     color: {
       type: String,
       required: true,
@@ -29,6 +33,19 @@ export default {
     tool: {
       type: String,
       required: true,
+    },
+  },
+  computed: {
+    brushGrid() {
+      const { brush } = this;
+      const grid = [];
+      const radius = Math.max(brush - 1, 0);
+      for (let by = -radius; by <= radius; by += 1) {
+        for (let bx = -radius; bx <= radius; bx += 1) {
+          grid.push([bx, by]);
+        }
+      }
+      return grid;
     },
   },
   watch: {
@@ -158,6 +175,7 @@ export default {
     onPointerMove(e, [x, y]) {
       const {
         $refs: { canvas },
+        brushGrid,
         color,
         frame,
         state,
@@ -174,45 +192,57 @@ export default {
       }
       x = Math.floor(x * SIZE / canvas.width);
       y = Math.floor(y * SIZE / canvas.width);
-      const i = ((y * state.width) + (frame * SIZE) + x) * 4;
-      if (state.lastPixel === i) {
+      const getPixel = (x, y) => (
+        ((y * state.width) + (frame * SIZE) + x) * 4
+      );
+      const pixel = getPixel(x, y);
+      if (state.lastPixel === pixel) {
         return;
       }
-      state.lastPixel = i;
+      state.lastPixel = pixel;
       const { pixels: { data: pixels } } = state;
-      switch (tool) {
-        case 'pick':
-          if (pixels[i + 3] >= 0X80) {
-            const r = pixels[i];
-            const g = pixels[i + 1];
-            const b = pixels[i + 2];
-            auxColor.r = r / 0xFF;
-            auxColor.g = g / 0xFF;
-            auxColor.b = b / 0xFF;
-            this.$emit('color', `#${auxColor.getHexString()}`);
-          }
-          return;
-        case 'erase':
-          pixels[i] = 0;
-          pixels[i + 1] = 0;
-          pixels[i + 2] = 0;
-          pixels[i + 3] = 0;
-          break;
-        default:
-          auxColor.set(color);
-          {
-            const avg = (auxColor.r + auxColor.g + auxColor.b) / 3;
-            const entropy = avg * 0.05;
-            auxColor.r += (Math.random() * 2 - 1) * entropy;
-            auxColor.g += (Math.random() * 2 - 1) * entropy;
-            auxColor.b += (Math.random() * 2 - 1) * entropy;
-          }
-          pixels[i] = auxColor.r * 0xFF;
-          pixels[i + 1] = auxColor.g * 0xFF;
-          pixels[i + 2] = auxColor.b * 0xFF;
-          pixels[i + 3] = 0xFF;
-          break;
+      if (tool === 'pick') {
+        if (pixels[pixel + 3] >= 0X80) {
+          const r = pixels[pixel];
+          const g = pixels[pixel + 1];
+          const b = pixels[pixel + 2];
+          auxColor.r = r / 0xFF;
+          auxColor.g = g / 0xFF;
+          auxColor.b = b / 0xFF;
+          this.$emit('color', `#${auxColor.getHexString()}`);
+        }
+        return;
       }
+      brushGrid.forEach(([bx, by]) => {
+        const px = x + bx;
+        const py = y + by;
+        if (
+          px < 0
+          || py < 0
+          || px >= SIZE
+          || py >= SIZE
+        ) {
+          return;
+        }
+        const pixel = getPixel(px, py);
+        if (tool === 'erase') {
+          pixels[pixel] = 0;
+          pixels[pixel + 1] = 0;
+          pixels[pixel + 2] = 0;
+          pixels[pixel + 3] = 0;
+        } else {
+          auxColor.set(color);
+          const avg = (auxColor.r + auxColor.g + auxColor.b) / 3;
+          const entropy = avg * 0.05;
+          auxColor.r += (Math.random() * 2 - 1) * entropy;
+          auxColor.g += (Math.random() * 2 - 1) * entropy;
+          auxColor.b += (Math.random() * 2 - 1) * entropy;
+          pixels[pixel] = auxColor.r * 0xFF;
+          pixels[pixel + 1] = auxColor.g * 0xFF;
+          pixels[pixel + 2] = auxColor.b * 0xFF;
+          pixels[pixel + 3] = 0xFF;
+        }
+      });
       state.ctx.putImageData(state.pixels, 0, 0);
       state.toBuffer().then(buffer => this.$emit('texture', buffer));
       this.render();

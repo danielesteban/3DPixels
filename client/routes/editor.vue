@@ -22,6 +22,7 @@ export default {
   },
   computed: {
     ...mapState('editor', [
+      'brush',
       'color',
       'frame',
       'frames',
@@ -152,6 +153,12 @@ export default {
         this.$options.filters.intColor(value)
       );
     },
+    setBrush({ target: { value } }) {
+      this.$store.dispatch(
+        'editor/setBrush',
+        Math.min(Math.max(parseInt(value, 10), 1), 10)
+      );
+    },
     setColor({ target: { value } }) {
       this.onColor(value);
     },
@@ -218,6 +225,16 @@ export default {
             Pick
           </button>
         </div>
+        <div>
+          &nbsp;Brush:&nbsp;
+          <input
+            :value="brush"
+            type="number"
+            min="1"
+            max="10"
+            @change="setBrush"
+          >
+        </div>
         <input
           :value="color"
           type="color"
@@ -248,6 +265,7 @@ export default {
         <Sprite
           v-if="mesh.texture"
           :background="mesh.bg"
+          :brush="brush"
           :color="color"
           :frame="frame"
           :texture="mesh.texture"
@@ -416,11 +434,6 @@ export default {
         padding: 0;
         cursor: pointer;
       }
-    }
-    label {
-      display: flex;
-      align-items: center;
-      margin: 0 0.75rem;
     }
   }
 </style>

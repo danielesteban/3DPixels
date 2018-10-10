@@ -3,6 +3,7 @@ import API from '../services/api';
 export default {
   namespaced: true,
   state: {
+    brush: 3,
     color: '#aaaaaa',
     frame: 0,
     frames: 0,
@@ -28,6 +29,9 @@ export default {
     SET_BACKGROUND(state, bg) {
       state.mesh.bg = bg;
       state.hasChanged = true;
+    },
+    SET_BRUSH(state, brush) {
+      state.brush = brush;
     },
     SET_COLOR(state, color) {
       state.color = color;
@@ -116,6 +120,9 @@ export default {
     },
     setBackground({ commit }, bg) {
       commit('SET_BACKGROUND', bg);
+    },
+    setBrush({ commit }, brush) {
+      commit('SET_BRUSH', brush);
     },
     setColor({ commit }, color) {
       commit('SET_COLOR', color);

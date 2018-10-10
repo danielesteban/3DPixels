@@ -2,10 +2,11 @@
 import moment from 'moment';
 import { mapState } from 'vuex';
 import Listing from '../components/listing';
+import Pagination from '../components/pagination';
 
 export default {
   name: 'Home',
-  components: { Listing },
+  components: { Listing, Pagination },
   filters: {
     fromNow(time) {
       return moment(time).fromNow();
@@ -15,25 +16,53 @@ export default {
     ...mapState('profile', [
       'meshes',
       'meta',
+      'pages',
     ]),
+    page() {
+      const { page } = this.$route.params;
+      return parseInt(page || 0, 10);
+    },
   },
   mounted() {
     const { id } = this.$route.params;
-    this.$store.dispatch('profile/fetch', id);
+    this.fetch(id, this.page);
   },
   beforeDestroy() {
-    this.$store.dispatch('home/reset');
+    this.reset();
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { id, page } = to.params;
+    this.reset();
+    this.fetch(id, parseInt(page || 0, 10));
+    next();
+  },
+  methods: {
+    fetch(id, page) {
+      this.$store.dispatch('profile/fetch', { id, page });
+    },
+    reset() {
+      this.$store.dispatch('profile/reset');
+    },
   },
 };
 </script>
 
 <template>
   <div class="profile">
-    <div class="meta">
+    <div
+      v-if="meta.name"
+      class="meta"
+    >
       <h1>{{ meta.name }}</h1>
       <p>joined {{ meta.createdAt | fromNow }}</p>
     </div>
     <Listing :meshes="meshes" />
+    <Pagination
+      :page="page"
+      :pages="pages"
+      :params="{ id: meta._id }"
+      route="profile"
+    />
   </div>
 </template>
 

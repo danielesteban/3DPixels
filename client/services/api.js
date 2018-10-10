@@ -25,8 +25,8 @@ const API = {
   },
 
   meshes: {
-    list() {
-      return client.get('meshes');
+    list(page) {
+      return client.get(`meshes/latest/${page}`);
     },
     meta(id) {
       return client.get(`meshes/${id}`);
@@ -58,9 +58,9 @@ const API = {
       return client
         .get(`user/${id}`);
     },
-    meshes(id) {
+    meshes(id, page) {
       return client
-        .get(`user/${id}/meshes`);
+        .get(`user/${id}/meshes/${page}`);
     },
     signin(email, password) {
       return client

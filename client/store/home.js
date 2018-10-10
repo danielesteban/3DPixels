@@ -3,23 +3,25 @@ import API from '../services/api';
 export default {
   namespaced: true,
   state: {
-    results: [],
+    meshes: [],
+    pages: 0,
   },
   mutations: {
-    SET_RESULTS(state, results) {
-      state.results = results || [];
+    SET_MESHES(state, { meshes, pages }) {
+      state.meshes = meshes || [];
+      state.pages = pages || 0;
     },
   },
   actions: {
-    fetch({ commit }) {
-      API.meshes.list()
+    fetch({ commit }, page) {
+      API.meshes.list(page)
         .then(({ data: results }) => (
-          commit('SET_RESULTS', results)
+          commit('SET_MESHES', results)
         ))
-        .catch(() => commit('SET_RESULTS', false));
+        .catch(() => commit('SET_MESHES', {}));
     },
     reset({ commit }) {
-      commit('SET_RESULTS', false);
+      commit('SET_MESHES', {});
     },
   },
 };

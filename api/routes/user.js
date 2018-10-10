@@ -23,13 +23,9 @@ module.exports.create = [
       name: req.body.name,
       password: req.body.password,
     });
-    user.save((err) => {
-      if (err) {
-        res.status(500).end();
-        return;
-      }
-      res.json(user.issueToken());
-    });
+    user.save()
+      .then(() => res.json(user.issueToken()))
+      .catch(() => res.status(500).end());
   },
 ];
 

@@ -40,7 +40,7 @@ module.exports = (api) => {
   );
 
   api.get(
-    '/meshes',
+    '/meshes/latest/:page',
     meshes.listAll
   );
 
@@ -71,7 +71,7 @@ module.exports = (api) => {
   );
 
   api.get(
-    '/user/:id/meshes',
+    '/user/:id/meshes/:page',
     meshes.listByCreator
   );
 };

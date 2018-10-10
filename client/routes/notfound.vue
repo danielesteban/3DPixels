@@ -18,6 +18,7 @@ export default {
 <style lang="scss" scoped>
   .notfound {
     display: flex;
+    width: 100%;
     flex-direction: column;
     align-items: center;
     padding: 1.5rem;

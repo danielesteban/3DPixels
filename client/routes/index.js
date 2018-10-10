@@ -11,9 +11,13 @@ export default new VueRouter({
   base: __BASENAME__,
   routes: [
     {
+      path: '/',
+      redirect: { name: 'home' },
+    },
+    {
       component: Home,
       name: 'home',
-      path: '/',
+      path: '/latest/:page?',
     },
     {
       component: Editor,
@@ -23,7 +27,7 @@ export default new VueRouter({
     {
       component: Profile,
       name: 'profile',
-      path: '/user/:id',
+      path: '/user/:id/:page?',
     },
     {
       component: NotFound,

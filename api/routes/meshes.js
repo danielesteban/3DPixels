@@ -5,8 +5,8 @@ const Mesh = require('../models/mesh');
 const SIZE = process.env.SIZE || 64;
 
 const validateMeshPayload = [
-  body('bg').isNumeric(),
-  body('fps').isNumeric(),
+  body('bg').isNumeric().toInt(),
+  body('fps').isNumeric().toInt(),
   body('title')
     .not().isEmpty()
     .isLength({ min: 1, max: 25 })
@@ -53,13 +53,9 @@ module.exports.create = [
       texture: req.file.buffer,
       title: req.body.title,
     });
-    mesh.save((err) => {
-      if (err) {
-        res.status(500).end();
-        return;
-      }
-      res.json(mesh._id);
-    });
+    mesh.save()
+      .then(() => res.json(mesh._id))
+      .catch(() => res.status(500).end());
   },
 ];
 
@@ -80,9 +76,9 @@ module.exports.update = [
         mesh.fps = req.body.fps;
         mesh.texture = req.file.buffer;
         mesh.title = req.body.title;
-        mesh.save(err => (
-          res.status(err ? 500 : 200).end()
-        ));
+        mesh.save()
+          .then(() => res.status(200).end())
+          .catch(() => res.status(500).end());
       });
   },
 ];
@@ -127,28 +123,48 @@ module.exports.getTexture = [
   },
 ];
 
-const list = (req, res, selector) => (
-  Mesh
-    .find(selector)
-    .select('creator bg fps title')
-    .populate('creator', 'name')
-    .sort('-createdAt')
-    .limit(12)
-    .exec((err, meshes) => {
-      if (err) {
-        res.status(500).end();
-        return;
-      }
-      res.json(meshes);
+const pageSize = 8;
+const list = (req, res, selector) => {
+  Promise.all([
+    Mesh
+      .find(selector)
+      .countDocuments()
+      .exec(),
+    Mesh
+      .find(selector)
+      .select('creator bg fps title')
+      .populate('creator', 'name')
+      .sort('-createdAt')
+      .skip(req.params.page * pageSize)
+      .limit(pageSize)
+      .exec(),
+  ])
+    .then(([count, meshes]) => {
+      res.json({
+        meshes,
+        pages: Math.ceil(count / pageSize),
+      });
     })
-);
-
-module.exports.listAll = (req, res) => {
-  list(req, res);
+    .catch((err) => {
+      console.log(err);
+      res.status(500).end();
+    });
 };
+
+module.exports.listAll = [
+  param('page').isNumeric().toInt(),
+  (req, res) => {
+    if (!validationResult(req).isEmpty()) {
+      res.status(422).end();
+      return;
+    }
+    list(req, res);
+  },
+];
 
 module.exports.listByCreator = [
   param('id').isMongoId(),
+  param('page').isNumeric().toInt(),
   (req, res) => {
     if (!validationResult(req).isEmpty()) {
       res.status(422).end();

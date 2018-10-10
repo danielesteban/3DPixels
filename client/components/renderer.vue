@@ -68,20 +68,21 @@ export default {
   },
   methods: {
     init() {
+      const SIZE = __SIZE__;
       const { mesh, $refs: { mount } } = this;
       const state = {};
       this.state = state;
       state.mount = mount;
-      state.camera = new PerspectiveCamera(64, 1, 1, 1024);
+      state.camera = new PerspectiveCamera(SIZE, 1, 1, 1024);
       state.clock = new Clock();
       state.renderer = new WebGLRenderer({ alpha: false, antialias: true });
       state.renderer.setPixelRatio(window.devicePixelRatio || 1);
       state.scene = new Scene();
-      state.scene.fog = new FogExp2(0, 0.0075);
+      state.scene.fog = new FogExp2(0, SIZE * 0.000117);
       state.tilt = new Object3D();
       state.tilt.add(state.camera);
-      state.camera.position.z = 64;
-      state.tilt.position.y = 32;
+      state.camera.position.z = SIZE;
+      state.tilt.position.y = SIZE * 0.5;
       state.pan = new Object3D();
       state.pan.add(state.tilt);
       state.scene.add(state.pan);

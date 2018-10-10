@@ -14,13 +14,13 @@ dotenv.config();
 const config = {
   api: process.env.API_URL,
   basename: process.env.BASENAME,
+  depth: parseInt(process.env.DEPTH, 10),
   creator: process.env.CREATOR,
   description: process.env.DESCRIPTION,
   domain: process.env.DOMAIN,
+  size: parseInt(process.env.SIZE, 10),
   title: process.env.TITLE,
 };
-
-console.log(config.api);
 
 const buildPath = path.resolve(__dirname, 'dist');
 const modulesPath = path.resolve(__dirname, 'node_modules');
@@ -167,7 +167,9 @@ module.exports = {
       },
       __API__: JSON.stringify(config.api),
       __BASENAME__: JSON.stringify(config.basename),
+      __DEPTH__: JSON.stringify(config.depth),
       __PRODUCTION__: JSON.stringify(mode === 'production'),
+      __SIZE__: JSON.stringify(config.size),
     }),
     new HtmlWebpackPlugin({
       config,

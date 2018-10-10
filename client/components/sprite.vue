@@ -4,8 +4,8 @@ import {
 } from 'three';
 import Touches from 'touches';
 
-const SIZE = 64;
 const auxColor = new Color();
+const SIZE = __SIZE__;
 
 export default {
   name: 'Sprite',

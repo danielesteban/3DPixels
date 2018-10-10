@@ -1,5 +1,8 @@
 const { param, body, validationResult } = require('express-validator/check');
+const imageSize = require('image-size');
 const Mesh = require('../models/mesh');
+
+const SIZE = process.env.SIZE || 64;
 
 const validateMeshPayload = [
   body('bg').isNumeric(),
@@ -20,6 +23,23 @@ const validateMeshPayload = [
     } else {
       next();
     }
+  },
+  (req, res, next) => {
+    try {
+      const meta = imageSize(req.file.buffer);
+      if (
+        meta.type !== 'png'
+        || !meta.width
+        || (meta.width % SIZE) !== 0
+        || meta.height !== SIZE
+      ) {
+        throw new Error();
+      }
+    } catch (e) {
+      res.status(422).end();
+      return;
+    }
+    next();
   },
 ];
 

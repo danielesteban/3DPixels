@@ -16,6 +16,7 @@
     "express": "^4.16.3",
     "express-validator": "^5.3.0",
     "helmet": "^3.13.0",
+    "image-size": "^0.6.3",
     "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.3.2",
     "multer": "^1.4.0",

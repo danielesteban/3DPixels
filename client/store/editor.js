@@ -73,7 +73,7 @@ export default {
   },
   actions: {
     create({ commit, rootState }) {
-      const SIZE = 64;
+      const SIZE = __SIZE__;
       const canvas = document.createElement('canvas');
       canvas.width = SIZE;
       canvas.height = SIZE;

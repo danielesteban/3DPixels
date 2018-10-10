@@ -1,7 +1,7 @@
 import { PNG } from 'pngjs';
 
-const SIZE = 64;
-const DEPTH = 2;
+const SIZE = __SIZE__;
+const DEPTH = __DEPTH__;
 
 const decode = buffer => (
   new Promise((resolve, reject) => (

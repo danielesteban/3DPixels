@@ -54,6 +54,7 @@ export default {
     },
   },
   mounted() {
+    window.addEventListener('keydown', this.onKeyDown, false);
     const { id } = this.$route.params;
     if (!id) {
       this.create();
@@ -62,6 +63,7 @@ export default {
     this.fetch(id);
   },
   beforeDestroy() {
+    window.removeEventListener('keydown', this.onKeyDown);
     this.reset();
   },
   beforeRouteUpdate(to, from, next) {
@@ -93,6 +95,29 @@ export default {
     },
     onFrames(frames) {
       this.$store.dispatch('editor/setFrames', frames);
+    },
+    onKeyDown({ keyCode, repeat }) {
+      const { frame, frames } = this;
+      if (repeat) return;
+      switch (keyCode) {
+        case 37:
+          if (frame > 0) this.stepFrame(-1);
+          break;
+        case 39:
+          if (frame < frames - 1) this.stepFrame(1);
+          break;
+        case 49:
+          this.setTool('paint');
+          break;
+        case 50:
+          this.setTool('erase');
+          break;
+        case 51:
+          this.setTool('pick');
+          break;
+        default:
+          break;
+      }
     },
     onTexture(texture) {
       this.$store.dispatch('editor/setTexture', texture);

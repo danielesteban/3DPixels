@@ -31,7 +31,6 @@ export default {
     },
     SET_COLOR(state, color) {
       state.color = color;
-      state.hasChanged = true;
     },
     SET_FPS(state, fps) {
       state.mesh.fps = fps;

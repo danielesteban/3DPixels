@@ -209,7 +209,7 @@ export default {
     <div class="toolbar">
       <div>
         <div>
-          <span>&nbsp;Brush:</span>
+          <span>&nbsp;&nbsp;Brush:</span>
           <input
             :value="brush"
             type="number"
@@ -329,7 +329,7 @@ export default {
       </div>
       <div>
         <div>
-          <span>&nbsp;FPS:</span>
+          <span>&nbsp;&nbsp;FPS:</span>
           <input
             :value="mesh.fps"
             type="number"

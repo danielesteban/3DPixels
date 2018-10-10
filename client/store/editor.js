@@ -3,7 +3,7 @@ import API from '../services/api';
 export default {
   namespaced: true,
   state: {
-    brush: 3,
+    brush: 2,
     color: '#aaaaaa',
     frame: 0,
     frames: 0,

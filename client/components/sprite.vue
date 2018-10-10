@@ -100,13 +100,12 @@ export default {
         width - ((frame + (clone ? 0 : 1)) * SIZE), height
       );
       state.pixels = state.ctx.getImageData(0, 0, state.width, state.height);
-      state.toBuffer().then((buffer) => {
-        this.$emit('texture', buffer);
+      this.updateTexture().then(() => (
         this.$emit('frames', {
           current: frame + 1,
           total: Math.floor(state.width / SIZE),
-        });
-      });
+        })
+      ));
     },
     removeFrame() {
       const {
@@ -123,14 +122,12 @@ export default {
         width - ((frame + 1) * SIZE), height
       );
       state.pixels = state.ctx.getImageData(0, 0, state.width, state.height);
-      state.toBuffer().then((buffer) => {
-        this.$emit('texture', buffer);
+      this.updateTexture().then(() => (
         this.$emit('frames', {
           current: Math.max(frame - 1, 0),
           total: Math.floor(state.width / SIZE),
-        });
-      });
-      this.render();
+        })
+      ));
     },
     load() {
       const img = new Image();
@@ -141,17 +138,7 @@ export default {
         state.ctx = state.getContext('2d');
         state.ctx.drawImage(img, 0, 0);
         state.pixels = state.ctx.getImageData(0, 0, state.width, state.height);
-        state.toBuffer = () => (
-          new Promise(resolve => (
-            state.toBlob((blob) => {
-              const reader = new FileReader();
-              reader.addEventListener('loadend', () => {
-                resolve(reader.result);
-              });
-              reader.readAsArrayBuffer(blob);
-            }, 'image/png')
-          ))
-        );
+        state.lastUpdate = Date.now();
         this.state = state;
         this.$emit('frames', {
           current: 0,
@@ -244,8 +231,15 @@ export default {
         }
       });
       state.ctx.putImageData(state.pixels, 0, 0);
-      state.toBuffer().then(buffer => this.$emit('texture', buffer));
       this.render();
+      const frequency = 100;
+      const delta = Date.now() - state.lastUpdate;
+      if (delta >= frequency) {
+        this.updateTexture();
+      } else {
+        clearTimeout(state.updateTimer);
+        state.updateTimer = setTimeout(this.updateTexture, frequency - delta);
+      }
     },
     onPointerUp() {
       this.drawing = false;
@@ -287,6 +281,22 @@ export default {
       ctx.lineWidth = 0.1;
       ctx.strokeStyle = 'rgba(0, 0, 0, .1)';
       ctx.stroke();
+    },
+    updateTexture() {
+      const { state } = this;
+      clearTimeout(state.updateTimer);
+      state.lastUpdate = Date.now();
+      return (
+        new Promise(resolve => (
+          state.toBlob((blob) => {
+            const reader = new FileReader();
+            reader.addEventListener('loadend', () => {
+              resolve(reader.result);
+            });
+            reader.readAsArrayBuffer(blob);
+          }, 'image/png')
+        ))
+      ).then(buffer => this.$emit('texture', buffer));
     },
   },
 };

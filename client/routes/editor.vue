@@ -97,9 +97,9 @@ export default {
     onFrames(frames) {
       this.$store.dispatch('editor/setFrames', frames);
     },
-    onKeyDown({ keyCode, repeat }) {
+    onKeyDown({ keyCode, repeat, target }) {
+      if (repeat || target.tagName === 'INPUT') return;
       const { frame, frames } = this;
-      if (repeat) return;
       switch (keyCode) {
         case 37:
           if (frame > 0) this.stepFrame(-1);

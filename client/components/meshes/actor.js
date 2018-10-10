@@ -21,7 +21,11 @@ class Actor extends Mesh {
     this.lastTick = 0;
     this.visible = false;
 
-    Mesher.mesh(texture || _id)
+    this.load(texture || _id);
+  }
+
+  load(texture) {
+    Mesher.mesh(texture)
       .then(({
         position,
         color,
@@ -31,10 +35,13 @@ class Actor extends Mesh {
         this.frames = frames;
         this.frame = Math.min(this.frame, frames.length - 1);
         const frame = frames[this.frame];
-        this.geometry.setDrawRange(frame.start, frame.count);
-        this.geometry.setIndex(new BufferAttribute(index, 1));
-        this.geometry.addAttribute('position', new BufferAttribute(position, 3));
-        this.geometry.addAttribute('color', new BufferAttribute(color, 3));
+        if (this.geometry) this.geometry.dispose();
+        const geometry = new BufferGeometry();
+        geometry.setDrawRange(frame.start, frame.count);
+        geometry.setIndex(new BufferAttribute(index, 1));
+        geometry.addAttribute('position', new BufferAttribute(position, 3));
+        geometry.addAttribute('color', new BufferAttribute(color, 3));
+        this.geometry = geometry;
         this.visible = true;
       });
   }

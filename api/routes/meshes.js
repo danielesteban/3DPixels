@@ -1,4 +1,4 @@
-const { param, body, validationResult } = require('express-validator/check');
+const { body, param, validationResult } = require('express-validator/check');
 const imageSize = require('image-size');
 const Mesh = require('../models/mesh');
 
@@ -96,7 +96,7 @@ module.exports.get = [
     }
     Mesh
       .findById(req.params.id)
-      .select('creator bg fps title')
+      .select('createdAt creator bg fps title')
       .populate('creator', 'name')
       .exec((err, mesh) => {
         if (err || !mesh) {
@@ -127,9 +127,9 @@ module.exports.getTexture = [
   },
 ];
 
-module.exports.list = (req, res) => {
+const list = (req, res, selector) => (
   Mesh
-    .find()
+    .find(selector)
     .select('creator bg fps title')
     .populate('creator', 'name')
     .sort('-createdAt')
@@ -140,5 +140,20 @@ module.exports.list = (req, res) => {
         return;
       }
       res.json(meshes);
-    });
+    })
+);
+
+module.exports.listAll = (req, res) => {
+  list(req, res);
 };
+
+module.exports.listByCreator = [
+  param('id').isMongoId(),
+  (req, res) => {
+    if (!validationResult(req).isEmpty()) {
+      res.status(422).end();
+      return;
+    }
+    list(req, res, { creator: req.params.id });
+  },
+];

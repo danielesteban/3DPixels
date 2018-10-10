@@ -47,6 +47,9 @@ export default {
             <i>&gt;</i>
           </div>
           <div class="content">
+            <router-link :to="{ name: 'profile', params: { id: profile._id } }">
+              Your profile
+            </router-link>
             <a @click="signOut">Sign-Out</a>
           </div>
         </div>
@@ -141,6 +144,9 @@ export default {
       background: rgba(0, 0, 0, .75);
       > a {
         padding: 0.5rem 1rem;
+        color: inherit;
+        text-decoration: none;
+        outline: 0;
         cursor: pointer;
       }
     }

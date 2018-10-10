@@ -54,6 +54,14 @@ const API = {
   },
 
   user: {
+    get(id) {
+      return client
+        .get(`user/${id}`);
+    },
+    meshes(id) {
+      return client
+        .get(`user/${id}/meshes`);
+    },
     signin(email, password) {
       return client
         .post('user', { email, password });

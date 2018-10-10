@@ -1,7 +1,6 @@
 <script>
-import {
-  Color,
-} from 'three';
+import moment from 'moment';
+import { Color } from 'three';
 import { mapState } from 'vuex';
 import Sprite from '../components/sprite';
 import Renderer from '../components/renderer';
@@ -11,6 +10,9 @@ export default {
   name: 'Editor',
   components: { Sprite, Renderer },
   filters: {
+    fromNow(time) {
+      return moment(time).fromNow();
+    },
     hexColor(int) {
       auxColor.set(int);
       return `#${auxColor.getHexString()}`;
@@ -202,9 +204,18 @@ export default {
       >
         {{ mesh.title }}
       </span>
-      <small v-if="mesh.creator">
-        by {{ mesh.creator.name }}
+      <small>
+        by
+        <router-link
+          v-if="mesh.creator"
+          :to="{ name: 'profile', params: { id: mesh.creator._id } }"
+        >
+          {{ mesh.creator.name }}
+        </router-link>
       </small>
+    </div>
+    <div class="meta">
+      created {{ mesh.createdAt | fromNow }}
     </div>
     <div class="toolbar">
       <div>
@@ -360,7 +371,7 @@ export default {
   }
   .title {
     font-size: 2.5em;
-    margin: 2rem auto 2.5rem;
+    margin: 2rem auto 1rem;
     > input {
       width: 500px;
       margin: 0;
@@ -375,7 +386,16 @@ export default {
     }
     > small {
       font-size: 0.75em;
+      > a {
+        color: inherit;
+        text-decoration: none;
+        outline: 0;
+      }
     }
+  }
+  .meta {
+    margin: 0 auto 1rem;
+    font-size: 0.75em;
   }
   .wrapper, .toolbar {
     max-width: 1280px;

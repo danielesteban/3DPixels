@@ -41,7 +41,7 @@ module.exports = (api) => {
 
   api.get(
     '/meshes',
-    meshes.list
+    meshes.listAll
   );
 
   api.get(
@@ -63,5 +63,15 @@ module.exports = (api) => {
   api.post(
     '/user',
     user.login
+  );
+
+  api.get(
+    '/user/:id',
+    user.get
+  );
+
+  api.get(
+    '/user/:id/meshes',
+    meshes.listByCreator
   );
 };

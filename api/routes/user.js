@@ -1,4 +1,4 @@
-const { body, validationResult } = require('express-validator/check');
+const { body, param, validationResult } = require('express-validator/check');
 const User = require('../models/user');
 
 module.exports.create = [
@@ -30,6 +30,26 @@ module.exports.create = [
       }
       res.json(user.issueToken());
     });
+  },
+];
+
+module.exports.get = [
+  param('id').isMongoId(),
+  (req, res) => {
+    if (!validationResult(req).isEmpty()) {
+      res.status(422).end();
+      return;
+    }
+    User
+      .findById(req.params.id)
+      .select('name createdAt')
+      .exec((err, mesh) => {
+        if (err || !mesh) {
+          res.status(err ? 500 : 404).end();
+          return;
+        }
+        res.json(mesh);
+      });
   },
 ];
 

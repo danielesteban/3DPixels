@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import Home from './home';
 import Editor from './editor';
 import NotFound from './notfound';
+import Profile from './profile';
 
 Vue.use(VueRouter);
 
@@ -18,6 +19,11 @@ export default new VueRouter({
       component: Editor,
       name: 'editor',
       path: '/editor/:id?',
+    },
+    {
+      component: Profile,
+      name: 'profile',
+      path: '/user/:id',
     },
     {
       component: NotFound,

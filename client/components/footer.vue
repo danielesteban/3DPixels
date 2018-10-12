@@ -2,6 +2,9 @@
 export default {
   name: 'Footer',
   computed: {
+    title() {
+      return __TITLE__;
+    },
     year() {
       return (new Date()).getFullYear();
     },
@@ -11,7 +14,7 @@ export default {
 
 <template>
   <div class="footer">
-    3DPixels &middot;
+    {{ title }}&nbsp;&middot;
     This site is&nbsp;
     <a
       href="https://github.com/danielesteban/3DPixels"
@@ -28,7 +31,7 @@ export default {
     >
       dani@gatunes
     </a>
-    &nbsp;&copy; {{ year }}
+    &nbsp;&copy;&nbsp;{{ year }}
   </div>
 </template>
 

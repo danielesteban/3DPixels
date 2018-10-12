@@ -12,11 +12,12 @@
     "__DEPTH__": 0,
     "__PRODUCTION__": false,
     "__SIZE__": 0,
+    "__TITLE__": ""
   },
   "parserOptions": {
-    parser: 'babel-eslint',
+    parser: "babel-eslint",
     ecmaVersion: 2018,
-    sourceType: 'module',
+    sourceType: "module"
   },
   "settings": {
     "import/resolver": {

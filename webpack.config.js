@@ -170,6 +170,7 @@ module.exports = {
       __DEPTH__: JSON.stringify(config.depth),
       __PRODUCTION__: JSON.stringify(mode === 'production'),
       __SIZE__: JSON.stringify(config.size),
+      __TITLE__: JSON.stringify(config.title),
     }),
     new HtmlWebpackPlugin({
       config,

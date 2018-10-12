@@ -1,7 +1,7 @@
 [3DPixels](https://3dpixels.gatunes.com/)
 ===
 
-> A work in progress. More info soon...
+> A pixel art inspiration gallery
 
 [![screenshot](client/screenshot.jpg)](https://3dpixels.gatunes.com/)
 

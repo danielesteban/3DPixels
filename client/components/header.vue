@@ -11,6 +11,9 @@ export default {
     isCreating() {
       return this.$route.name === 'editor' && !this.$route.params.id;
     },
+    title() {
+      return __TITLE__;
+    },
   },
   methods: {
     signIn() {
@@ -28,7 +31,7 @@ export default {
     <div>
       <div class="nav">
         <router-link :to="{ name: 'home' }">
-          3DPixels
+          {{ title }}
         </router-link>
       </div>
       <div class="actions">

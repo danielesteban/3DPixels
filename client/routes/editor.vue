@@ -204,10 +204,9 @@ export default {
       >
         {{ mesh.title }}
       </span>
-      <small>
+      <small v-if="mesh.creator">
         by
         <router-link
-          v-if="mesh.creator"
           :to="{ name: 'profile', params: { id: mesh.creator._id } }"
         >
           {{ mesh.creator.name }}

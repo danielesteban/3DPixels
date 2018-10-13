@@ -58,6 +58,9 @@ module.exports = {
           presets: [
             ['@babel/preset-env', { modules: false }],
           ],
+          plugins: [
+            '@babel/plugin-syntax-dynamic-import',
+          ],
         },
         include: srcPath,
         exclude: [modulesPath, /worker\.js$/],
@@ -77,6 +80,9 @@ module.exports = {
             options: {
               presets: [
                 ['@babel/preset-env', { modules: false }],
+              ],
+              plugins: [
+                '@babel/plugin-syntax-dynamic-import',
               ],
             },
           },
@@ -153,6 +159,11 @@ module.exports = {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendor',
+          chunks: 'all',
+        },
+        workers: {
+          test: /worker\.js$/,
+          name: 'workers',
           chunks: 'all',
         },
       },

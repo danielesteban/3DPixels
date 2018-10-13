@@ -1,14 +1,26 @@
 import API from '../../services/api';
-import Worker from './worker';
 
 class Mesher {
   constructor() {
     this.queue = [];
-    this.workers = [...Array(Mesher.numWorkers)].map(() => {
-      const worker = new Worker();
-      worker.onmessage = ({ data }) => this.onMessage(worker, data);
-      return worker;
-    });
+    this.workers = [];
+    import('./worker')
+      .then(({ default: Worker }) => {
+        this.workers = [...Array(Mesher.numWorkers)].map(() => {
+          const worker = new Worker();
+          worker.onmessage = ({ data }) => this.onMessage(worker, data);
+          return worker;
+        });
+        const { queue } = this;
+        this.workers.forEach((worker) => {
+          if (queue.length) {
+            const { buffer, disposable, resolve } = queue.shift();
+            worker.isBusy = true;
+            worker.resolve = resolve;
+            worker.postMessage({ buffer }, disposable ? [buffer] : []);
+          }
+        });
+      });
   }
 
   mesh(texture) {

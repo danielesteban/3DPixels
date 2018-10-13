@@ -1,16 +1,21 @@
 version: '3'
 services:
+  mongo:
+    image: mongo:latest
+    volumes:
+     - "mongo_config:/data/configdb"
+     - "mongo_data:/data/db"
+     - "./backup:/data/dump"
   node:
     build: .
     restart: always
     environment:
-     - MONGO_URI=mongodb://mongo/3dpixels
      - API_SECRET=superunsecuresecret
+     - MONGO_URI=mongodb://mongo/3dpixels
     links:
      - mongo
     ports:
      - "127.0.0.1:8081:8081"
-  mongo:
-    image: mongo:latest
-     - "db/config:/data/configdb"
-     - "db/data:/data/db"
+volumes:
+  mongo_config:
+  mongo_data:

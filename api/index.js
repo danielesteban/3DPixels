@@ -17,10 +17,10 @@ const setupExpress = () => {
   if (process.env.NODE_ENV === 'production') {
     api.use(helmet());
   } else {
-    api.use(cors());
     api.use(nocache());
   }
   api.use(compression());
+  api.use(cors());
   api.use(bodyParser.json());
   return api;
 };

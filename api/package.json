@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node .",
     "start:dev": "nodemon .",
+    "docker:backup": "docker-compose -p 3d_pixels_api exec mongo mongodump -o /data/dump",
     "docker:up": "docker-compose -p 3d_pixels_api up -d --build",
     "docker:down": "docker-compose -p 3d_pixels_api down"
   },

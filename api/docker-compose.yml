@@ -2,6 +2,7 @@ version: '3'
 services:
   mongo:
     image: mongo:latest
+    restart: always
     volumes:
      - "mongo_config:/data/configdb"
      - "mongo_data:/data/db"

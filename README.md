@@ -26,7 +26,7 @@
 
  * cd server  
  * yarn install
- * yarn start:dev
+ * yarn start
 
 #### How do I start the dev client?
 

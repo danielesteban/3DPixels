@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "node .",
-    "start:dev": "nodemon .",
+    "start": "nodemon .",
     "docker:backup": "docker-compose -p 3d_pixels_api exec mongo mongodump -o /data/dump",
     "docker:up": "docker-compose -p 3d_pixels_api up -d --build",
     "docker:down": "docker-compose -p 3d_pixels_api down"

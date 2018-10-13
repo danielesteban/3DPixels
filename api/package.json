@@ -6,7 +6,8 @@
     "start": "nodemon .",
     "docker:backup": "docker-compose -p 3d_pixels_api exec mongo mongodump -o /data/dump",
     "docker:up": "docker-compose -p 3d_pixels_api up -d --build",
-    "docker:down": "docker-compose -p 3d_pixels_api down"
+    "docker:down": "docker-compose -p 3d_pixels_api down",
+    "test": "mocha --exit"
   },
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",
@@ -23,6 +24,8 @@
     "nocache": "^2.0.0"
   },
   "devDependencies": {
-    "nodemon": "^1.18.4"
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.4",
+    "supertest": "^3.3.0"
   }
 }

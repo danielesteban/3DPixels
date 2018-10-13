@@ -20,9 +20,9 @@ const validateMeshPayload = [
       || req.file.mimetype.indexOf('image/png') !== 0
     ) {
       res.status(422).end();
-    } else {
-      next();
+      return;
     }
+    next();
   },
   (req, res, next) => {
     try {
@@ -145,10 +145,7 @@ const list = (req, res, selector) => {
         pages: Math.ceil(count / pageSize),
       });
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).end();
-    });
+    .catch(() => res.status(500).end());
 };
 
 module.exports.listAll = [

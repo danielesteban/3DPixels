@@ -17,6 +17,7 @@ module.exports.create = [
   (req, res) => {
     if (!validationResult(req).isEmpty()) {
       res.status(422).end();
+      return;
     }
     const user = new User({
       email: req.body.email,
@@ -60,6 +61,7 @@ module.exports.login = [
   (req, res) => {
     if (!validationResult(req).isEmpty()) {
       res.status(422).end();
+      return;
     }
     User
       .findOne({ email: req.body.email }, (err, user) => {

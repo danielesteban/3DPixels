@@ -470,12 +470,10 @@ export default {
         cursor: pointer;
       }
       &[type=number] {
-        width: 3.25rem;
+        width: 4.25rem;
         border-left: 0;
-        &::-webkit-inner-spin-button,
-        &::-webkit-outer-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
+        &::-webkit-inner-spin-button {
+          opacity: 1;
         }
       }
     }

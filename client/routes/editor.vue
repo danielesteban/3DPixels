@@ -296,12 +296,10 @@ export default {
           @texture="onTexture"
         />
       </div>
-      <div>
-        <Renderer
-          v-if="mesh.texture"
-          :mesh="mesh"
-        />
-      </div>
+      <Renderer
+        v-if="mesh.texture"
+        :mesh="mesh"
+      />
     </div>
     <div class="toolbar">
       <div>

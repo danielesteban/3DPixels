@@ -30,12 +30,10 @@ export default {
       :key="mesh._id"
       class="mesh"
     >
-      <div class="renderer">
-        <Renderer
-          :mesh="mesh"
-          class="renderer"
-        />
-      </div>
+      <Renderer
+        :mesh="mesh"
+        :pointer-animation="true"
+      />
       <router-link
         :style="{ backgroundColor: $options.filters.hexColor(mesh.bg) }"
         :to="{ name: 'editor', params: { id: mesh._id } }"

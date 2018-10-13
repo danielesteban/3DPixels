@@ -45,6 +45,12 @@ export default {
       type: Object,
       required: true,
     },
+    pointerAnimation: {
+      type: Boolean,
+      default() {
+        return false;
+      },
+    },
   },
   watch: {
     'mesh.bg': function watchBackground() {
@@ -94,8 +100,10 @@ export default {
       this.setClearColor(mesh.bg);
 
       mount.appendChild(state.renderer.domElement);
-      mount.addEventListener('contextmenu', e => e.preventDefault());
-      mount.addEventListener('dblclick', this.requestFullscreen);
+      mount.addEventListener('contextmenu', e => e.preventDefault(), false);
+      mount.addEventListener('dblclick', this.requestFullscreen, false);
+      mount.addEventListener('mouseenter', this.onPointerEnter, false);
+      mount.addEventListener('mouseleave', this.onPointerLeave, false);
       window.addEventListener('blur', this.onPointerUp, false);
       window.addEventListener('resize', this.onResize, false);
       state.fullscreen = fullscreen(mount);
@@ -105,11 +113,14 @@ export default {
 
       state.pointer = {
         active: false,
+        animation: this.pointerAnimation,
+        over: false,
         current: new Vector2(0, 0),
         movement: new Vector2(0, 0),
+        normalized: new Vector2(0, 0),
         last: new Vector2(0, 0),
       };
-      state.touches = Touches(window, { filtered: true })
+      state.touches = Touches(window, { filtered: true, target: mount })
         .on('start', this.onPointerDown)
         .on('move', this.onPointerMove)
         .on('end', this.onPointerUp);
@@ -141,6 +152,8 @@ export default {
       const {
         clock,
         camera,
+        fullscreen,
+        mount,
         pointer,
         renderer,
         scene,
@@ -149,14 +162,31 @@ export default {
       } = this.state;
       renderer.animationDelta = clock.getDelta();
       renderer.animationTime = clock.oldTime / 1000;
+      const maxAngle = Math.PI * 0.45;
       if (pointer.active) {
         const step = renderer.animationDelta * 0.2;
         pan.rotation.y -= pointer.movement.x * step;
-        pan.rotation.y = Math.min(Math.max(pan.rotation.y, Math.PI * -0.45), Math.PI * 0.45);
+        pan.rotation.y = Math.min(Math.max(pan.rotation.y, -maxAngle), maxAngle);
         tilt.rotation.x -= pointer.movement.y * step * 0.5;
-        tilt.rotation.x = Math.min(Math.max(tilt.rotation.x, Math.PI * -0.45), Math.PI * 0.45);
+        tilt.rotation.x = Math.min(Math.max(tilt.rotation.x, -maxAngle), maxAngle);
         pointer.movement.x = 0;
         pointer.movement.y = 0;
+      } else if (pointer.animation && fullscreen.target() !== mount) {
+        const step = renderer.animationDelta;
+        const smooth = delta => (
+          Math.min(Math.max(delta, -step), step)
+        );
+        if (pointer.over) {
+          pan.rotation.y += smooth(
+            (pointer.normalized.x * maxAngle) - pan.rotation.y
+          );
+          tilt.rotation.x += smooth(
+            (pointer.normalized.y * maxAngle) - tilt.rotation.x
+          );
+        } else {
+          pan.rotation.y += smooth(-pan.rotation.y);
+          tilt.rotation.x += smooth(-tilt.rotation.x);
+        }
       }
       renderer.render(scene, camera);
     },
@@ -170,15 +200,26 @@ export default {
       }
     },
     onPointerMove(e, [x, y]) {
-      const { pointer } = this.state;
+      const { pointer, renderer } = this.state;
+      const { width, height } = renderer.getSize();
       pointer.current.x = x;
       pointer.current.y = y;
+      pointer.normalized.x = Math.min(Math.max(0.5 - (x / width), -0.5), 0.5);
+      pointer.normalized.y = Math.min(Math.max(0.5 - (y / height), -0.5), 0.5);
       pointer.movement.subVectors(pointer.current, pointer.last);
       pointer.last.copy(pointer.current);
     },
     onPointerUp() {
       const { pointer } = this.state;
       pointer.active = false;
+    },
+    onPointerEnter() {
+      const { pointer } = this.state;
+      pointer.over = true;
+    },
+    onPointerLeave() {
+      const { pointer } = this.state;
+      pointer.over = false;
     },
     onResize() {
       const {

@@ -54,7 +54,9 @@ export default {
     >
       &lt;
     </a>
-    <a>{{ page + 1 }}/{{ pages }}</a>
+    <span>
+      {{ page + 1 }}/{{ pages }}
+    </span>
     <router-link
       v-if="page < pages - 1"
       :to="getRoute(page + 1)"
@@ -75,7 +77,7 @@ export default {
     display: flex;
     justify-content: center;
     margin-bottom: 2rem;
-    > a {
+    > a, > span {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -85,11 +87,14 @@ export default {
       color: inherit;
       text-decoration: none;
       outline: 0;
+      cursor: default;
+      background-color: #222;
+      border: 2px solid #111;
+    }
+    > a {
       cursor: pointer;
       transition: background-color ease-out .15s, opacity ease-out .15s;
       will-change: background-color, opacity;
-      background-color: #222;
-      border: 2px solid #111;
       &.active, &:hover {
         background-color: #333;
       }

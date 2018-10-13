@@ -17,7 +17,7 @@ export default {
     {{ title }}&nbsp;&middot;
     This site is&nbsp;
     <a
-      href="https://github.com/danielesteban/3DPixels"
+      href="https://github.com/danielesteban/3DPixels#readme"
       rel="noopener noreferrer"
       target="_blank"
     >

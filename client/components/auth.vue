@@ -10,8 +10,15 @@ export default {
   },
   computed: {
     ...mapState('user', [
+      'hasAuthError',
       'isShowingAuth',
     ]),
+    hasSigninError() {
+      return !this.isSignup && this.hasAuthError === 'signin';
+    },
+    hasSignupError() {
+      return this.isSignup && this.hasAuthError === 'signup';
+    },
   },
   watch: {
     isShowingAuth() {
@@ -114,6 +121,18 @@ export default {
           required
         >
       </div>
+      <div
+        v-if="hasSigninError"
+        class="error"
+      >
+        Invalid email/password combination
+      </div>
+      <div
+        v-if="hasSignupError"
+        class="error"
+      >
+        Email already exists
+      </div>
       <div class="submit">
         <button type="submit">
           <span v-if="isSignup">Sign-Up</span>
@@ -191,6 +210,11 @@ export default {
         cursor: default;
       }
     }
+  }
+  .error {
+    margin: 1rem 0;
+    background-color: #822;
+    text-align: center;
   }
   .alternative {
     border-top: 1px solid #222;

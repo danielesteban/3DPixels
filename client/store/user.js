@@ -4,6 +4,7 @@ import API from '../services/api';
 export default {
   namespaced: true,
   state: {
+    hasAuthError: false,
     isAuth: false,
     isShowingAuth: false,
     profile: {},
@@ -14,6 +15,10 @@ export default {
     },
     HIDE_AUTH(state) {
       state.isShowingAuth = false;
+      state.hasAuthError = false;
+    },
+    SET_AUTH_ERROR(state, hasError) {
+      state.hasAuthError = hasError || false;
     },
     SIGN_IN(state, token) {
       state.isAuth = true;
@@ -44,21 +49,23 @@ export default {
       commit('HIDE_AUTH');
     },
     signin({ commit }, { email, password }) {
+      commit('SET_AUTH_ERROR');
       API.user.signin(email, password)
         .then(({ data: token }) => (
           commit('SIGN_IN', token)
         ))
-        .catch(err => console.error(err));
+        .catch(() => commit('SET_AUTH_ERROR', 'signin'));
     },
     signout({ commit }) {
       commit('SIGN_OUT');
     },
     signup({ commit }, { name, email, password }) {
+      commit('SET_AUTH_ERROR');
       API.user.signup(name, email, password)
         .then(({ data: token }) => (
           commit('SIGN_IN', token)
         ))
-        .catch(err => console.error(err));
+        .catch(() => commit('SET_AUTH_ERROR', 'signup'));
     },
   },
 };

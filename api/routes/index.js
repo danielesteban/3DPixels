@@ -66,6 +66,12 @@ module.exports = (api) => {
   );
 
   api.get(
+    '/user',
+    requireAuth,
+    user.refreshToken
+  );
+
+  api.get(
     '/user/:id',
     user.get
   );

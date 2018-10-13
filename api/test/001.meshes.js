@@ -83,22 +83,24 @@ describe('Create a mesh', () => {
   ));
 });
 
-describe('List user meshes', () => {
-  it('GET /user/:id/meshes/:page should return a list of meshes', () => (
+describe('List meshes', () => {
+  it('GET /meshes/latest/:page should return a list of meshes', () => (
     request(api)
-      .get(`/user/${api.get('testUserID')}/meshes/0`)
+      .get('/meshes/latest/0')
       .expect(200)
       .then(({ body: { meshes, pages } }) => {
         assert(meshes.length === 1 && pages === 1);
         assert(meshes[0]._id === api.get('testMeshID'));
       })
   ));
-});
-
-describe('List latest meshes', () => {
-  it('GET /meshes/latest/:page should return a list of meshes', () => (
+  it('GET /user/:id/meshes/:page with a bad id should return a 422', () => (
     request(api)
-      .get('/meshes/latest/0')
+      .get('/user/badid/meshes/0')
+      .expect(422)
+  ));
+  it('GET /user/:id/meshes/:page should return a list of meshes', () => (
+    request(api)
+      .get(`/user/${api.get('testUserID')}/meshes/0`)
       .expect(200)
       .then(({ body: { meshes, pages } }) => {
         assert(meshes.length === 1 && pages === 1);

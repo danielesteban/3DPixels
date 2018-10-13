@@ -42,6 +42,9 @@ if (process.env.NODE_ENV === 'test') {
 
 // Start server
 setupRoutes(api);
-api.listen(process.env.PORT || 8081);
+api.listen(
+  process.env.PORT
+  || (process.env.NODE_ENV === 'test' ? 8082 : 8081)
+);
 
 module.exports = api;

@@ -79,3 +79,7 @@ module.exports.login = [
       });
   },
 ];
+
+module.exports.refreshToken = (req, res) => {
+  res.json(req.user.issueToken());
+};

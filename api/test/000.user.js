@@ -11,7 +11,7 @@ const testUser = {
   password: '1234',
 };
 
-describe('Create user', () => {
+describe('Create a user', () => {
   before(done => (
     mongoose.connection.once('connected', done)
   ));
@@ -38,6 +38,19 @@ describe('Create user', () => {
         api.set('testUserID', session._id);
       })
   ));
+});
+
+describe('Profile', () => {
+  it('GET /user/:id with a bad id should return a 422', () => (
+    request(api)
+      .get('/user/badid')
+      .expect(422)
+  ));
+  it('GET /user/:id with an unknown id should return a 404', () => (
+    request(api)
+      .get('/user/000000000000000000000000')
+      .expect(404)
+  ));
   it('GET /user/:id should return the user meta', () => (
     request(api)
       .get(`/user/${api.get('testUserID')}`)
@@ -49,7 +62,7 @@ describe('Create user', () => {
   ));
 });
 
-describe('User Sign-In', () => {
+describe('Sessions', () => {
   it('POST /user without params should return a 422', () => (
     request(api)
       .post('/user')
@@ -62,6 +75,22 @@ describe('User Sign-In', () => {
         email: testUser.email,
         password: testUser.password,
       })
+      .expect(200)
+      .then(({ body: token }) => jwt.decode(token))
+      .then((session) => {
+        assert(session._id === api.get('testUserID'));
+        assert(session.name === testUser.name);
+      })
+  ));
+  it('GET /user without a token should return a 401', () => (
+    request(api)
+      .get('/user')
+      .expect(401)
+  ));
+  it('GET /user should return a session token', () => (
+    request(api)
+      .get('/user')
+      .set('Authorization', `Bearer ${api.get('testUserToken')}`)
       .expect(200)
       .then(({ body: token }) => jwt.decode(token))
       .then((session) => {

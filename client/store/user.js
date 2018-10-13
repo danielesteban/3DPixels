@@ -7,7 +7,6 @@ export default {
     isAuth: false,
     isShowingAuth: false,
     profile: {},
-    token: '',
   },
   mutations: {
     SHOW_AUTH(state) {
@@ -19,13 +18,11 @@ export default {
     SIGN_IN(state, token) {
       state.isAuth = true;
       state.isShowingAuth = false;
-      state.token = token;
       state.profile = decode(token);
       API.auth.setToken(token);
     },
     SIGN_OUT(state) {
       state.isAuth = false;
-      state.token = '';
       state.profile = {};
       API.auth.setToken();
     },
@@ -35,6 +32,9 @@ export default {
       const storedToken = API.auth.getStoredToken();
       if (storedToken) {
         commit('SIGN_IN', storedToken);
+        API.auth.refreshToken()
+          .then(({ data: token }) => API.auth.setToken(token))
+          .catch(() => commit('SIGN_OUT'));
       }
     },
     showAuth({ commit }) {

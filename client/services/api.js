@@ -12,6 +12,9 @@ const API = {
     getStoredToken() {
       return store.get(jwtStoreKey);
     },
+    refreshToken() {
+      return client.get('user');
+    },
     setToken(token) {
       const headers = client.defaults.headers.common;
       if (token) {

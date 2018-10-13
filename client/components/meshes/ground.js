@@ -33,7 +33,7 @@ class Ground extends Mesh {
     ).replace(
       'vec4 diffuseColor = vec4( diffuse, opacity );',
       [
-        'vec2 coord = vWorldPosition.xz * 0.125;',
+        'vec2 coord = vWorldPosition.xz * 0.25;',
         'vec2 grid = abs(fract(coord - 0.5) - 0.5) / fwidth(coord);',
         'float line = min(grid.x, grid.y);',
         'vec4 diffuseColor = vec4(mix(diffuse, diffuse * 1.25, 1.0 - min(line, 1.0)), opacity);',

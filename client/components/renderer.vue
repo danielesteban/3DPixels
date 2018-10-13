@@ -249,7 +249,7 @@ export default {
     setClearColor(color) {
       const { ground, renderer, scene: { fog } } = this.state;
       fog.color.setHex(color);
-      ground.material.color.copy(fog.color).offsetHSL(0, 0, -0.33);
+      ground.material.color.copy(fog.color).multiplyScalar(0.25);
       renderer.setClearColor(fog.color);
     },
   },

@@ -13,13 +13,13 @@
     "body-parser": "^1.18.3",
     "compression": "^1.7.3",
     "cors": "^2.8.4",
-    "express": "^4.16.3",
+    "express": "^4.16.4",
     "express-validator": "^5.3.0",
-    "helmet": "^3.13.0",
+    "helmet": "^3.14.0",
     "image-size": "^0.6.3",
     "jsonwebtoken": "^8.3.0",
-    "mongoose": "^5.3.2",
-    "multer": "^1.4.0",
+    "mongoose": "^5.3.3",
+    "multer": "^1.4.1",
     "nocache": "^2.0.0"
   },
   "devDependencies": {

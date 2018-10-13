@@ -134,23 +134,29 @@ export default {
         margin-left: 1rem;
         font-style: normal;
         transform: translate(-50%, 0) rotate(90deg);
+        transition: transform ease-out .15s;
         will-change: transform;
       }
     }
     .content {
-      display: none;
       position: absolute;
       top: 100%;
       right: 0;
       width: 100%;
+      display: flex;
       flex-direction: column;
       background: rgba(0, 0, 0, .75);
+      max-height: 0;
+      transition: max-height ease-out .15s;
+      will-change: max-height;
+      overflow: hidden;
       > a {
         padding: 0.5rem 1rem;
         color: inherit;
         text-decoration: none;
         outline: 0;
         cursor: pointer;
+        border-top: 1px solid #333;
       }
     }
     &:hover {
@@ -161,7 +167,7 @@ export default {
         }
       }
       .content {
-        display: flex;
+        max-height: 6rem;
       }
     }
   }

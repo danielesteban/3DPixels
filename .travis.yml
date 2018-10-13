@@ -7,6 +7,7 @@ cache:
 env:
   global:
   - API_URL=https://projects.gatunes.com/3dpixels/
+  - secure: LBI16yNJKP0gtnjNQ4Kxv5bZbnL1e8OLXkzaFOlARbo+2p3vdrM9YAqK0447XMrsA5/bepFHLaHxioRjUMav114Zq+hZuT1QQPxEzHfrfEELRBbXG70evtQay2/Dq+V2gmO2xffQWOuUCX+hLIgcSwmjVzVr+oYjoRQ22hJghrs+90df3MIAT7O3tf/ufQiwSxzNuITa4iSxmctcrHPR+SPKc0u9WlMkYgsGgltZye47asKVMViF8L+hf+nVDTeyFFzJeFEsiDIfqOk02A02ZRxE2Ea1lJPGNQiQF6iqzcszR/73kgcxT2Joye8DYx1lEqr4THydCW7d3GPKaop4PUQ1uFcIhUa8uB8I79W2w2kB1pWDe4nJZIt+zBC1JmSXUtk4IfzDYOX5TbBoNwIUz5ZBC/dNVZjzXjjT/r/AFWSBR0knyTswCmq9Y1++YX/IAq5yN0wnC+AjNe1gGQHkiIvXK7ZrYfdTSRa1InDl6naOC80e+5p79e+11bdEBjS/Rtkb8PMf40/RwTU+WzsffXDRZjGNnwSRCqkMFh186yTGcfm8w5YG2g+9RVN3bN13HvOcCCGatQlnJEVOmhbpb3NS+fj+A8U11NGLekfVZGEPPj7JgrHyzNX/dKUyPyMsF7qzwg1vEQsmZQYoH8LSiOD5eIX4QEwG4z0bPJyBP/M=
 script:
 - yarn lint
 - yarn build

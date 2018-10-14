@@ -120,7 +120,7 @@ describe('Update a mesh', () => {
       .attach('texture', testMesh.pixel, 'texture.png')
       .expect(422)
   ));
-  it('GET /meshes/:id with a bad id should return a 422', () => (
+  it('PUT /meshes/:id with a bad id should return a 422', () => (
     request(api)
       .put('/meshes/badid')
       .set('Authorization', `Bearer ${api.get('testUserToken')}`)
@@ -130,7 +130,7 @@ describe('Update a mesh', () => {
       .attach('texture', testMesh.update, 'texture.png')
       .expect(422)
   ));
-  it('GET /meshes/:id with an unknown id should return a 404', () => (
+  it('PUT /meshes/:id with an unknown id should return a 404', () => (
     request(api)
       .put('/meshes/000000000000000000000000')
       .set('Authorization', `Bearer ${api.get('testUserToken')}`)

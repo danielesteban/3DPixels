@@ -6,6 +6,6 @@ fi
 rm -rf /data/dump
 mkdir -p /data/dump
 tar -C /data/dump -xzf /data/backups/${BACKUP}.tar.gz
-mongo dbpixels --eval "db.dropDatabase()"
+mongo 3dpixels --eval "db.dropDatabase()"
 mongorestore /data/dump
 rm -rf /data/dump

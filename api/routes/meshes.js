@@ -111,13 +111,24 @@ module.exports.getTexture = [
       res.status(422).end();
       return;
     }
-    Mesh.findById(req.params.id, 'texture', (err, mesh) => {
+    Mesh.findById(req.params.id, 'texture updatedAt', (err, mesh) => {
       if (err || !mesh) {
         res.status(err ? 500 : 404).end();
         return;
       }
+      if (process.env.NODE_ENV === 'production') {
+        const lastModified = mesh.updatedAt.toUTCString();
+        if (req.get('if-modified-since') === lastModified) {
+          res.status(304).end();
+          return;
+        }
+        res
+          .set('Cache-Control', 'must-revalidate')
+          .set('Last-Modified', lastModified);
+      }
       res
-        .type('image/png')
+        .set('Content-Length', mesh.texture.byteLength)
+        .set('Content-Type', 'image/png')
         .send(mesh.texture);
     });
   },

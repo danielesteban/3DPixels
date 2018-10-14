@@ -38,12 +38,14 @@ export default {
       'isAuth',
       'profile',
     ]),
+    creator() {
+      return this.mesh.creator || (this.isAuth && this.profile);
+    },
     isCreator() {
       return (
         !this.mesh._id
         || (
           this.isAuth
-          && this.mesh.creator
           && this.mesh.creator._id === this.profile._id
         )
       );
@@ -199,12 +201,12 @@ export default {
       >
         {{ mesh.title }}
       </span>
-      <small v-if="mesh.creator">
+      <small v-if="creator">
         by
         <router-link
-          :to="{ name: 'profile', params: { id: mesh.creator._id } }"
+          :to="{ name: 'profile', params: { id: creator._id } }"
         >
-          {{ mesh.creator.name }}
+          {{ creator.name }}
         </router-link>
       </small>
     </div>

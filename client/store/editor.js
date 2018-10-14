@@ -74,7 +74,7 @@ export default {
     },
   },
   actions: {
-    create({ commit, rootState }) {
+    create({ commit }) {
       const SIZE = __SIZE__;
       const canvas = document.createElement('canvas');
       canvas.width = SIZE;
@@ -84,8 +84,6 @@ export default {
         reader.addEventListener('loadend', () => {
           commit('RESET');
           commit('SET_MESH', {
-            _id: false,
-            creator: rootState.user.isAuth ? rootState.user.profile : false,
             bg: 0x555555,
             fps: 2,
             texture: reader.result,

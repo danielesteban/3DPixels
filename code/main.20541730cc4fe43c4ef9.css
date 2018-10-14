@@ -125,11 +125,11 @@ canvas{vertical-align:middle
 }
 
 
-.frames[data-v-26784efd]{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;padding:1rem 0 1rem 1rem;overflow-y:scroll
+.frames[data-v-22b8d138]{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;padding:1rem 0 1rem 1rem;overflow-y:scroll
 }
-.frames img[data-v-26784efd]{width:100%;vertical-align:middle;border-top:1px solid #000;border-bottom:1px solid #000;-ms-interpolation-mode:nearest-neighbor;image-rendering:-webkit-optimize-contrast;image-rendering:-moz-crisp-edges;image-rendering:-o-pixelated;image-rendering:pixelated;cursor:pointer;opacity:0.5;-webkit-transition:opacity ease-out .15s;transition:opacity ease-out .15s;will-change:opacity
+.frames img[data-v-22b8d138]{width:100%;vertical-align:middle;border-top:1px solid #000;border-bottom:1px solid #000;-ms-interpolation-mode:nearest-neighbor;image-rendering:-webkit-optimize-contrast;image-rendering:-moz-crisp-edges;image-rendering:-o-pixelated;image-rendering:pixelated;cursor:pointer;opacity:0.5;-webkit-transition:opacity ease-out .15s;transition:opacity ease-out .15s;will-change:opacity
 }
-.frames img.active[data-v-26784efd]{opacity:1;cursor:default
+.frames img.active[data-v-22b8d138]{opacity:1;cursor:default
 }
 
 
@@ -201,4 +201,4 @@ canvas{vertical-align:middle
 }
 
 
-/*# sourceMappingURL=main.3ef05561114f6cb8722dd697cc2e4a70.css.map*/
+/*# sourceMappingURL=main.c902a7c2d6e7808014809ddf013feff6.css.map*/

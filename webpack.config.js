@@ -188,7 +188,7 @@ module.exports = {
       csp: (
         `default-src 'self' ${config.api}`
         + `${mode === 'development' ? " ws://localhost:8080 'unsafe-eval'" : ''};`
-        + "img-src 'self' blob:;"
+        + "img-src 'self' blob: data:;"
         + `style-src 'self'${mode === 'development' ? " 'unsafe-inline'" : ''};`
         + "worker-src 'self' blob:;"
       ),

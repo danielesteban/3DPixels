@@ -2,13 +2,14 @@
 import moment from 'moment';
 import { Color } from 'three';
 import { mapState } from 'vuex';
+import Frames from '../components/frames';
 import Sprite from '../components/sprite';
 import Renderer from '../components/renderer';
 
 const auxColor = new Color();
 export default {
   name: 'Editor',
-  components: { Sprite, Renderer },
+  components: { Frames, Sprite, Renderer },
   filters: {
     fromNow(time) {
       return moment(time).fromNow();
@@ -107,9 +108,11 @@ export default {
       const { frame, frames } = this;
       switch (keyCode) {
         case 37:
+        case 38:
           if (frame > 0) this.stepFrame(-1);
           break;
         case 39:
+        case 40:
           if (frame < frames - 1) this.stepFrame(1);
           break;
         case 49:
@@ -218,70 +221,55 @@ export default {
     </div>
     <div class="toolbar">
       <div>
-        <div>
-          <span>&nbsp;&nbsp;Brush:</span>
-          <input
-            :value="brush"
-            type="number"
-            min="1"
-            max="10"
-            @change="setBrush"
-          >
-          <button
-            :class="{ active: tool === 'paint' }"
-            @click="setTool('paint')"
-          >
-            Paint
-          </button>
-          <button
-            :class="{ active: tool === 'erase' }"
-            @click="setTool('erase')"
-          >
-            Erase
-          </button>
-          <button
-            :class="{ active: tool === 'pick' }"
-            @click="setTool('pick')"
-          >
-            Pick
-          </button>
-        </div>
-        <div>
-          <input
-            :value="color"
-            type="color"
-            @change="setColor"
-          >
-        </div>
+        <button
+          :class="{ active: tool === 'paint' }"
+          @click="setTool('paint')"
+        >
+          Paint
+        </button>
+        <button
+          :class="{ active: tool === 'erase' }"
+          @click="setTool('erase')"
+        >
+          Erase
+        </button>
+        <button
+          :class="{ active: tool === 'pick' }"
+          @click="setTool('pick')"
+        >
+          Pick
+        </button>
       </div>
       <div>
-        <div>
-          <input
-            :value="mesh.bg | hexColor"
-            type="color"
-            @change="setBackground"
-          >
-        </div>
-        <div>
-          <button
-            :class="{ warning: hasChanged }"
-            :disabled="mesh._id && isCreator && !hasChanged"
-            @click="save()"
-          >
-            <span v-if="isCreator">
-              Save
-            </span>
-            <span v-else>
-              Save as copy
-            </span>
-          </button>
-        </div>
+        <label>FPS:</label>
+        <input
+          :value="mesh.fps"
+          type="number"
+          min="1"
+          @change="setFps"
+        >
+      </div>
+      <div>
+        <button
+          :class="{ warning: hasChanged }"
+          :disabled="mesh._id && isCreator && !hasChanged"
+          @click="save()"
+        >
+          <span v-if="isCreator">
+            Save
+          </span>
+          <span v-else>
+            Save as copy
+          </span>
+        </button>
       </div>
     </div>
-    <div class="wrapper">
+    <div
+      v-if="mesh.texture"
+      class="wrapper"
+    >
       <div>
         <Sprite
-          v-if="mesh.texture"
           :background="mesh.bg"
           :brush="brush"
           :color="color"
@@ -293,63 +281,62 @@ export default {
           @texture="onTexture"
         />
       </div>
+      <div class="frames">
+        <Frames
+          :background="mesh.bg"
+          :current="frame"
+          :texture="mesh.texture"
+        />
+      </div>
       <Renderer
-        v-if="mesh.texture"
         :mesh="mesh"
       />
     </div>
     <div class="toolbar">
       <div>
-        <div>
-          <button
-            :disabled="frame <= 0"
-            @click="stepFrame(-1)"
-          >
-            &nbsp;&laquo;&nbsp;
-          </button>
-          <button
-            :disabled="frame >= frames - 1"
-            @click="stepFrame(1)"
-          >
-            &nbsp;&raquo;&nbsp;
-          </button>
-        </div>
-        <div>
-          <button
-            @click="addFrame(true)"
-          >
-            Clone
-          </button>
-          <button
-            @click="addFrame()"
-          >
-            &plus;
-          </button>
-          <button
-            :disabled="frames <= 1"
-            @click="removeFrame()"
-          >
-            &times;
-          </button>
-        </div>
+        <input
+          :value="color"
+          type="color"
+          @change="setColor"
+        >
+        <input
+          :value="mesh.bg | hexColor"
+          type="color"
+          @change="setBackground"
+        >
+        <label>Brush:</label>
+        <input
+          :value="brush"
+          type="number"
+          min="1"
+          max="10"
+          @change="setBrush"
+        >
       </div>
       <div>
-        <div>
-          <span>&nbsp;&nbsp;FPS:</span>
-          <input
-            :value="mesh.fps"
-            type="number"
-            min="1"
-            @change="setFps"
-          >
-        </div>
-        <div>
-          <button
-            @click="fullscreen"
-          >
-            Fullscreen
-          </button>
-        </div>
+        <button
+          @click="addFrame()"
+        >
+          &plus;
+        </button>
+        <button
+          @click="addFrame(true)"
+        >
+          Clone
+        </button>
+        <button
+          :disabled="frames <= 1"
+          @click="removeFrame()"
+        >
+          &times;
+        </button>
+      </div>
+      <div>
+        <button
+          @click="fullscreen"
+        >
+          Fullscreen
+        </button>
       </div>
     </div>
   </div>
@@ -389,57 +376,55 @@ export default {
     }
   }
   .meta {
-    margin: 0 auto 1rem;
+    margin: 0 auto 1.5rem;
     font-size: 0.75em;
   }
   .wrapper, .toolbar {
-    max-width: 1280px;
+    max-width: 1400px;
+    width: 100%;
   }
   .wrapper {
     display: flex;
-    align-items: center;
-    width: 100%;
+    border-left: 2px solid #111;
+    border-right: 2px solid #111;
     > div {
-      width: 50%;
+      width: calc(50% - 100px);
+      &.frames {
+        position: relative;
+        width: 200px;
+      }
     }
   }
   .toolbar {
     display: flex;
-    width: 100%;
     background: #222;
     font-size: 1.25em;
+    border-top: 2px solid #111;
+    border-bottom: 2px solid #111;
     > div {
       display: flex;
-      justify-content: space-between;
-      width: 50%;
-      &:first-child {
-        border-right: 1px solid #111;
+      align-items: center;
+      width: (100% / 3);
+      &:nth-child(2) {
+        justify-content: center;
       }
-      &:last-child {
-        border-left: 1px solid #111;
-      }
-      > div {
-        display: flex;
-        align-items: center;
+      &:nth-child(3) {
+        justify-content: flex-end;
       }
     }
-    button, input {
-      margin: 0 0.1rem;
+    button, input, label {
+      margin: 0;
       padding: 0 1.5rem;
       font-family: inherit;
       font-size: inherit;
       height: 50px;
       background-color: #222;
       color: inherit;
-      border: 2px solid #111;
-      border-top: 0;
-      border-bottom: 0;
+      border: 0;
       outline: 0;
-      &:first-child {
-        margin-left: 0;
-      }
+      border-left: 2px solid #111;
       &:last-child {
-        margin-right: 0;
+        border-right: 2px solid #111;
       }
     }
     button {
@@ -461,33 +446,23 @@ export default {
       }
     }
     input {
-      width: 5rem;
-      padding: 0 0.75rem;
       &[type=color] {
-        padding: 0;
+        width: 5rem;
+        padding: 0 0.25rem;
         cursor: pointer;
       }
       &[type=number] {
-        width: 4.25rem;
+        width: 6rem;
         border-left: 0;
         &::-webkit-inner-spin-button {
           opacity: 1;
         }
       }
     }
-    > div > div:first-child {
-      button, input {
-        &:first-child {
-          border-left: 0;
-        }
-      }
-    }
-    > div > div:last-child {
-      button, input {
-        &:last-child {
-          border-right: 0;
-        }
-      }
+    label {
+      display: flex;
+      align-items: center;
+      padding-right: 0;
     }
   }
 </style>

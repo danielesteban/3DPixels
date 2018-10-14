@@ -161,9 +161,9 @@ export default {
     bottom: 0;
     background: rgba(0, 0, 0, .5);
     > form {
-      background: #333;
+      background: #222;
       padding: 2rem;
-      border: 2px solid #222;
+      border: 2px solid #111;
     }
   }
   .field {
@@ -181,7 +181,7 @@ export default {
       padding: 0 1.5rem;
       height: 50px;
       background: transparent;
-      border: 2px solid #222;
+      border: 2px solid #111;
       outline: 0;
     }
   }
@@ -196,14 +196,14 @@ export default {
       color: inherit;
       padding: 0 1.5rem;
       height: 60px;
-      background-color: #222;
+      background-color: transparent;
       border: 2px solid #111;
       outline: 0;
       cursor: pointer;
       transition: background-color ease-out .15s;
       will-change: background-color;
       &:hover {
-        background-color: #1a1a1a;
+        background-color: #333;
       }
       &[disabled] {
         opacity: .75;
@@ -217,7 +217,7 @@ export default {
     text-align: center;
   }
   .alternative {
-    border-top: 1px solid #222;
+    border-top: 1px solid #111;
     margin: 2rem 0 0;
     padding: 2rem 0 0;
     text-align: center;

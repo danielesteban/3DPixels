@@ -62,13 +62,14 @@ export default {
   }
   .mesh {
     margin: 1.5rem;
-    border: 2px solid #222;
+    border: 2px solid #111;
     width: 350px;
     .meta {
       display: flex;
       align-items: center;
       color: inherit;
       text-decoration: none;
+      border-top: 2px solid #111;
       overflow: hidden;
       .title, .creator {
         white-space: nowrap;

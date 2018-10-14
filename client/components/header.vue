@@ -69,9 +69,10 @@ export default {
 
 <style lang="scss" scoped>
   .header {
-    background: #222;
     display: flex;
     justify-content: center;
+    background: #222;
+    border-bottom: 2px solid #111;
     > div {
       max-width: 1600px;
       padding: 0 1.75rem;
@@ -101,23 +102,26 @@ export default {
       display: flex;
       align-items: center;
       height: 100%;
-      margin-left: 0.25rem;
+      margin: 0;
       padding: 0 1.5rem;
       border: 0;
       outline: 0;
       cursor: pointer;
       text-decoration: none;
-      background-color: #333;
+      background-color: transparent;
       transition: background-color ease-out .15s;
       will-change: background-color;
+      border-left: 2px solid #111;
+      &:last-child {
+        border-right: 2px solid #111;
+      }
       &:hover {
-        background-color: #111;
+        background-color: #333;
       }
     }
   }
   .dropdown {
     position: relative;
-    margin-left: 0.25rem;
     height: 100%;
     .toggle {
       display: flex;
@@ -126,9 +130,9 @@ export default {
       padding: 0 1.5rem;
       justify-content: space-between;
       align-items: center;
-      background-color: #333;
       transition: background-color ease-out .15s;
       will-change: background-color;
+      border-left: 2px solid #111;
       > i {
         display: block;
         margin-left: 1rem;
@@ -138,6 +142,9 @@ export default {
         will-change: transform;
       }
     }
+    &:last-child .toggle {
+      border-right: 2px solid #111;
+    }
     .content {
       position: absolute;
       top: 100%;
@@ -145,23 +152,30 @@ export default {
       width: 100%;
       display: flex;
       flex-direction: column;
-      background: rgba(0, 0, 0, .75);
+      background: #222;
       max-height: 0;
       transition: max-height ease-out .15s;
       will-change: max-height;
       overflow: hidden;
+      border: 2px solid #111;
+      border-top: 0;
       > a {
         padding: 0.5rem 1rem;
         color: inherit;
         text-decoration: none;
         outline: 0;
         cursor: pointer;
-        border-top: 1px solid #333;
+        border-top: 2px solid #111;
+        transition: background-color ease-out .15s;
+        will-change: background-color;
+        &:hover {
+          background-color: #333;
+        }
       }
     }
     &:hover {
       .toggle {
-        background-color: #111;
+        background-color: #333;
         > i {
           transform: translate(-50%, 0) rotate(-90deg);
         }

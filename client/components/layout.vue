@@ -64,9 +64,9 @@ export default {
     background: rgba(#000, .5);
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(72, 155, 43, .25);
+    background: rgba(#fff, .25);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(72, 155, 43, .5);
+    background: rgba(#fff, .5);
   }
 </style>

@@ -40,6 +40,11 @@ export default {
       state.mesh.fps = fps;
       state.hasChanged = true;
     },
+    SET_FRAME(state, index) {
+      state.frame = (
+        Math.min(Math.max(index, 0), state.frames - 1)
+      );
+    },
     STEP_FRAME(state, inc) {
       state.frame = (
         Math.min(Math.max(state.frame + inc, 0), state.frames - 1)
@@ -129,6 +134,9 @@ export default {
     },
     setFPS({ commit }, fps) {
       commit('SET_FPS', fps);
+    },
+    setFrame({ commit }, index) {
+      commit('SET_FRAME', index);
     },
     stepFrame({ commit }, inc) {
       commit('STEP_FRAME', inc);

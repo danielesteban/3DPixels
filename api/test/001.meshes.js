@@ -28,7 +28,7 @@ describe('Create a mesh', () => {
       .put('/meshes')
       .expect(401)
   ));
-  it('PUT /meshes/ without params should return a 422', () => (
+  it('PUT /meshes without params should return a 422', () => (
     request(api)
       .put('/meshes')
       .set('Authorization', `Bearer ${api.get('testUserToken')}`)

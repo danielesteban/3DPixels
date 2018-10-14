@@ -82,12 +82,12 @@ describe('Sessions', () => {
         assert(session.name === testUser.name);
       })
   ));
-  it('GET /user without a token should return a 401', () => (
+  it('GET  /user without a token should return a 401', () => (
     request(api)
       .get('/user')
       .expect(401)
   ));
-  it('GET /user should return a session token', () => (
+  it('GET  /user should return a session token', () => (
     request(api)
       .get('/user')
       .set('Authorization', `Bearer ${api.get('testUserToken')}`)

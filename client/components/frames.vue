@@ -74,6 +74,7 @@ export default {
       :src="frame"
       :style="backgroundStyle"
       @click="setFrame(index)"
+      @mousedown.prevent
     >
   </div>
 </template>

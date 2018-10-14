@@ -49,14 +49,6 @@ export default {
       );
     },
   },
-  watch: {
-    'mesh._id': function watchID() {
-      const { mesh: { _id: id } } = this;
-      if (id) {
-        this.$router.replace({ name: 'editor', params: { id } });
-      }
-    },
-  },
   mounted() {
     window.addEventListener('keydown', this.onKeyDown, false);
     const { id } = this.$route.params;

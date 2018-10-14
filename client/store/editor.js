@@ -55,10 +55,6 @@ export default {
       state.frame = current;
       state.frames = total;
     },
-    SET_ID(state, { id, creator }) {
-      state.mesh._id = id;
-      state.mesh.creator = creator;
-    },
     SET_MESH(state, mesh) {
       state.mesh = mesh;
     },
@@ -118,11 +114,14 @@ export default {
     reset({ commit }) {
       commit('RESET');
     },
-    save({ commit, rootState, state }) {
+    save({ commit, state }) {
       API.meshes.save(state.mesh)
         .then(({ data: id }) => {
-          commit('SAVED');
-          if (id) commit('SET_ID', { id, creator: rootState.user.profile });
+          if (id) {
+            router.replace({ name: 'editor', params: { id } });
+          } else {
+            commit('SAVED');
+          }
         })
         .catch(console.error);
     },

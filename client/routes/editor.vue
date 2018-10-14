@@ -227,8 +227,6 @@ export default {
             max="10"
             @change="setBrush"
           >
-        </div>
-        <div>
           <button
             :class="{ active: tool === 'paint' }"
             @click="setTool('paint')"
@@ -241,14 +239,14 @@ export default {
           >
             Erase
           </button>
-        </div>
-        <div>
           <button
             :class="{ active: tool === 'pick' }"
             @click="setTool('pick')"
           >
             Pick
           </button>
+        </div>
+        <div>
           <input
             :value="color"
             type="color"

@@ -5,7 +5,6 @@ const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 const multer = require('multer');
-const nocache = require('nocache');
 const setupRoutes = require('./routes');
 
 // Setup mongoose
@@ -30,8 +29,6 @@ if (process.env.NODE_ENV === 'test') {
 const api = express();
 if (process.env.NODE_ENV === 'production') {
   api.use(helmet());
-} else {
-  api.use(nocache());
 }
 api.use(compression());
 api.use(cors());

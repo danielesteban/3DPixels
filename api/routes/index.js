@@ -1,7 +1,9 @@
+const nocache = require('nocache');
 const meshes = require('./meshes');
 const user = require('./user');
 const User = require('../models/user');
 
+const preventCache = nocache();
 const requireAuth = (req, res, next) => {
   if (req.headers.authorization) {
     const header = req.headers.authorization.split(' ');
@@ -27,6 +29,7 @@ module.exports = (api) => {
   // Meshes
   api.put(
     '/meshes',
+    preventCache,
     requireAuth,
     api.get('multer').single('texture'),
     meshes.create
@@ -34,6 +37,7 @@ module.exports = (api) => {
 
   api.put(
     '/meshes/:id',
+    preventCache,
     requireAuth,
     api.get('multer').single('texture'),
     meshes.update
@@ -57,16 +61,19 @@ module.exports = (api) => {
   // User
   api.put(
     '/user',
+    preventCache,
     user.create
   );
 
   api.post(
     '/user',
+    preventCache,
     user.login
   );
 
   api.get(
     '/user',
+    preventCache,
     requireAuth,
     user.refreshToken
   );

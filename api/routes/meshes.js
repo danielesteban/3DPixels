@@ -116,19 +116,16 @@ module.exports.getTexture = [
         res.status(err ? 500 : 404).end();
         return;
       }
-      if (process.env.NODE_ENV === 'production') {
-        const lastModified = mesh.updatedAt.toUTCString();
-        if (req.get('if-modified-since') === lastModified) {
-          res.status(304).end();
-          return;
-        }
-        res
-          .set('Cache-Control', 'must-revalidate')
-          .set('Last-Modified', lastModified);
+      const lastModified = mesh.updatedAt.toUTCString();
+      if (req.get('if-modified-since') === lastModified) {
+        res.status(304).end();
+        return;
       }
       res
+        .set('Cache-Control', 'must-revalidate')
         .set('Content-Length', mesh.texture.byteLength)
         .set('Content-Type', 'image/png')
+        .set('Last-Modified', lastModified)
         .send(mesh.texture);
     });
   },

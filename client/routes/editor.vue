@@ -188,7 +188,7 @@ export default {
 
 <template>
   <div
-    v-if="mesh"
+    v-if="mesh.texture"
     class="editor"
   >
     <div class="title">
@@ -264,10 +264,7 @@ export default {
         </button>
       </div>
     </div>
-    <div
-      v-if="mesh.texture"
-      class="wrapper"
-    >
+    <div class="wrapper">
       <div>
         <Sprite
           :background="mesh.bg"

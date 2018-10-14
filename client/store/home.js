@@ -7,21 +7,26 @@ export default {
     pages: 0,
   },
   mutations: {
+    RESET(state) {
+      state.meshes = [];
+      state.pages = 0;
+      state.meta = {};
+    },
     SET_MESHES(state, { meshes, pages }) {
-      state.meshes = meshes || [];
-      state.pages = pages || 0;
+      state.meshes = meshes;
+      state.pages = pages;
     },
   },
   actions: {
     fetch({ commit }, page) {
       API.meshes.list(page)
-        .then(({ data: results }) => (
-          commit('SET_MESHES', results)
+        .then(({ data }) => (
+          commit('SET_MESHES', data)
         ))
-        .catch(() => commit('SET_MESHES', {}));
+        .catch(() => commit('RESET'));
     },
     reset({ commit }) {
-      commit('SET_MESHES', {});
+      commit('RESET');
     },
   },
 };

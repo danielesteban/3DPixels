@@ -1,4 +1,5 @@
 import API from '../services/api';
+import router from '../routes';
 
 export default {
   namespaced: true,
@@ -8,30 +9,34 @@ export default {
     pages: 0,
   },
   mutations: {
+    RESET(state) {
+      state.meshes = [];
+      state.pages = 0;
+      state.meta = {};
+    },
     SET_MESHES(state, { meshes, pages }) {
-      state.meshes = meshes || [];
-      state.pages = pages || 0;
+      state.meshes = meshes;
+      state.pages = pages;
     },
     SET_META(state, meta) {
-      state.meta = meta || {};
+      state.meta = meta;
     },
   },
   actions: {
     fetch({ commit }, { id, page }) {
-      API.user.meshes(id, page)
-        .then(({ data: meshes }) => (
-          commit('SET_MESHES', meshes)
-        ))
-        .catch(() => commit('SET_MESHES', {}));
-      API.user.get(id)
-        .then(({ data: meta }) => (
-          commit('SET_META', meta)
-        ))
-        .catch(() => commit('SET_META', false));
+      Promise.all([
+        API.user.meshes(id, page)
+          .then(({ data }) => (
+            commit('SET_MESHES', data)
+          )),
+        API.user.get(id)
+          .then(({ data }) => (
+            commit('SET_META', data)
+          )),
+      ]).catch(() => router.push({ name: 'home' }));
     },
     reset({ commit }) {
-      commit('SET_MESHES', {});
-      commit('SET_META', false);
+      commit('RESET');
     },
   },
 };

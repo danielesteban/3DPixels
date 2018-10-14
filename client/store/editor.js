@@ -1,4 +1,5 @@
 import API from '../services/api';
+import router from '../routes';
 
 export default {
   namespaced: true,
@@ -59,7 +60,7 @@ export default {
       state.mesh.creator = creator;
     },
     SET_MESH(state, mesh) {
-      state.mesh = mesh || false;
+      state.mesh = mesh;
     },
     SET_TEXTURE(state, texture) {
       state.mesh.texture = texture;
@@ -106,11 +107,13 @@ export default {
         API.meshes.meta(id),
         API.meshes.texture(id),
       ])
-        .then(responses => commit('SET_MESH', {
-          ...responses[0].data,
-          texture: responses[1].data,
-        }))
-        .catch(() => commit('SET_MESH', false));
+        .then(([{ data: meta }, { data: texture }]) => (
+          commit('SET_MESH', {
+            ...meta,
+            texture,
+          })
+        ))
+        .catch(() => router.push({ name: 'home' }));
     },
     reset({ commit }) {
       commit('RESET');

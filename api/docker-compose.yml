@@ -6,7 +6,7 @@ services:
     volumes:
      - "mongo_config:/data/configdb"
      - "mongo_data:/data/db"
-     - "./backup:/data/dump"
+     - "./backups:/data/backups"
   node:
     build: .
     restart: always

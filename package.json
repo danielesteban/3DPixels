@@ -1,7 +1,7 @@
 {
   "name": "3DPixels",
   "version": "1.0.0",
-  "description": "",
+  "description": "A pixel art inspiration gallery",
   "scripts": {
     "start": "webpack-dev-server",
     "build": "rimraf dist && cross-env NODE_ENV=production webpack",

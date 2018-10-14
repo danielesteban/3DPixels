@@ -1,12 +1,13 @@
 {
   "name": "3DPixelsAPI",
   "version": "1.0.0",
-  "description": "",
+  "description": "A pixel art inspiration gallery API",
   "scripts": {
-    "start": "nodemon .",
-    "docker:backup": "docker-compose -p 3d_pixels_api exec mongo mongodump -o /data/dump",
     "docker:up": "docker-compose -p 3d_pixels_api up -d --build",
     "docker:down": "docker-compose -p 3d_pixels_api down",
+    "docker:backup": "docker-compose -p 3d_pixels_api exec mongo /data/backups/backup.sh",
+    "docker:restore": "docker-compose -p 3d_pixels_api exec mongo /data/backups/restore.sh",
+    "start": "nodemon .",
     "test": "mocha --exit"
   },
   "dependencies": {

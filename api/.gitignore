@@ -1,2 +1,2 @@
-backup/
+backups/*.tar.gz
 node_modules/

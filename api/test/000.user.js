@@ -68,6 +68,15 @@ describe('Sessions', () => {
       .post('/user')
       .expect(422)
   ));
+  it('POST /user with a bad password should return a 401', () => (
+    request(api)
+      .post('/user')
+      .send({
+        email: testUser.email,
+        password: 'badpassword',
+      })
+      .expect(401)
+  ));
   it('POST /user should return a session token', () => (
     request(api)
       .post('/user')

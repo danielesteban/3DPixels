@@ -67,19 +67,20 @@ module.exports.update = [
       .findOne({
         _id: req.params.id,
         creator: req.user._id,
-      }, (err, mesh) => {
-        if (err || !mesh) {
-          res.status(err ? 500 : 404).end();
-          return;
+      })
+      .then((mesh) => {
+        if (!mesh) {
+          return res.status(404).end();
         }
         mesh.bg = req.body.bg;
         mesh.fps = req.body.fps;
         mesh.texture = req.file.buffer;
         mesh.title = req.body.title;
-        mesh.save()
-          .then(() => res.status(200).end())
-          .catch(() => res.status(500).end());
-      });
+        return mesh
+          .save()
+          .then(() => res.status(200).end());
+      })
+      .catch(() => res.status(500).end());
   },
 ];
 
@@ -94,13 +95,14 @@ module.exports.get = [
       .findById(req.params.id)
       .select('createdAt creator bg fps title')
       .populate('creator', 'name')
-      .exec((err, mesh) => {
-        if (err || !mesh) {
-          res.status(err ? 500 : 404).end();
+      .then((mesh) => {
+        if (!mesh) {
+          res.status(404).end();
           return;
         }
         res.json(mesh);
-      });
+      })
+      .catch(() => res.status(500).end());
   },
 ];
 
@@ -111,23 +113,27 @@ module.exports.getTexture = [
       res.status(422).end();
       return;
     }
-    Mesh.findById(req.params.id, 'texture updatedAt', (err, mesh) => {
-      if (err || !mesh) {
-        res.status(err ? 500 : 404).end();
-        return;
-      }
-      const lastModified = mesh.updatedAt.toUTCString();
-      if (req.get('if-modified-since') === lastModified) {
-        res.status(304).end();
-        return;
-      }
-      res
-        .set('Cache-Control', 'must-revalidate')
-        .set('Content-Length', mesh.texture.byteLength)
-        .set('Content-Type', 'image/png')
-        .set('Last-Modified', lastModified)
-        .send(mesh.texture);
-    });
+    Mesh
+      .findById(req.params.id)
+      .select('texture updatedAt')
+      .then((mesh) => {
+        if (!mesh) {
+          res.status(404).end();
+          return;
+        }
+        const lastModified = mesh.updatedAt.toUTCString();
+        if (req.get('if-modified-since') === lastModified) {
+          res.status(304).end();
+          return;
+        }
+        res
+          .set('Cache-Control', 'must-revalidate')
+          .set('Content-Length', mesh.texture.byteLength)
+          .set('Content-Type', 'image/png')
+          .set('Last-Modified', lastModified)
+          .send(mesh.texture);
+      })
+      .catch(() => res.status(500).end());
   },
 ];
 
@@ -136,16 +142,14 @@ const list = (req, res, selector) => {
   Promise.all([
     Mesh
       .find(selector)
-      .countDocuments()
-      .exec(),
+      .countDocuments(),
     Mesh
       .find(selector)
       .select('creator bg fps title')
       .populate('creator', 'name')
       .sort('-createdAt')
       .skip(req.params.page * pageSize)
-      .limit(pageSize)
-      .exec(),
+      .limit(pageSize),
   ])
     .then(([count, meshes]) => {
       res.json({

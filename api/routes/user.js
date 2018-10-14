@@ -40,13 +40,14 @@ module.exports.get = [
     User
       .findById(req.params.id)
       .select('name createdAt')
-      .exec((err, mesh) => {
-        if (err || !mesh) {
-          res.status(err ? 500 : 404).end();
+      .then((user) => {
+        if (!user) {
+          res.status(404).end();
           return;
         }
-        res.json(mesh);
-      });
+        res.json(user);
+      })
+      .catch(() => res.status(500).end());
   },
 ];
 
@@ -64,19 +65,22 @@ module.exports.login = [
       return;
     }
     User
-      .findOne({ email: req.body.email }, (err, user) => {
-        if (err || !user) {
-          res.status(err ? 500 : 401).end();
-          return;
+      .findOne({ email: req.body.email })
+      .then((user) => {
+        if (!user) {
+          return res.status(401).end();
         }
-        user.comparePassword(req.body.password, (err, isMatch) => {
-          if (err || !isMatch) {
-            res.status(err ? 500 : 401).end();
-            return;
-          }
-          res.json(user.issueToken());
-        });
-      });
+        return user
+          .comparePassword(req.body.password)
+          .then((isMatch) => {
+            if (!isMatch) {
+              res.status(401).end();
+              return;
+            }
+            res.json(user.issueToken());
+          });
+      })
+      .catch(() => res.status(500).end());
   },
 ];
 

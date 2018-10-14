@@ -11,14 +11,17 @@ const requireAuth = (req, res, next) => {
       header[0] === 'Bearer'
       && header[1]
     ) {
-      User.fromToken(header[1], (err, user) => {
-        if (err || !user) {
-          res.status(err ? 500 : 401).end();
-          return;
-        }
-        req.user = user;
-        next();
-      });
+      User
+        .fromToken(header[1])
+        .then((user) => {
+          if (!user) {
+            res.status(401).end();
+            return;
+          }
+          req.user = user;
+          next();
+        })
+        .catch(() => res.status(500).end());
       return;
     }
   }

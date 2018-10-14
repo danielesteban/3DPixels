@@ -35,11 +35,17 @@ UserSchema.pre('save', function onSave(next) {
 });
 
 UserSchema.methods = {
-  comparePassword(candidatePassword, cb) {
-    bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-      if (err) return cb(err);
-      return cb(null, isMatch);
-    });
+  comparePassword(candidatePassword) {
+    const user = this;
+    return new Promise((resolve, reject) => (
+      bcrypt.compare(candidatePassword, user.password, (err, isMatch) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(isMatch);
+      })
+    ));
   },
   issueToken() {
     return jwt.sign(
@@ -54,15 +60,17 @@ UserSchema.methods = {
 };
 
 UserSchema.statics = {
-  fromToken(token, cb) {
+  fromToken(token) {
     const User = this;
-    jwt.verify(token, API_SECRET, (err, decoded) => {
-      if (err) {
-        cb(err);
-        return;
-      }
-      User.findById(decoded._id, cb);
-    });
+    return new Promise((resolve, reject) => (
+      jwt.verify(token, API_SECRET, (err, decoded) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(User.findById(decoded._id));
+      })
+    ));
   },
 };
 

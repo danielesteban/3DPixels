@@ -19,11 +19,15 @@ mongoose.connection.on('error', console.error);
 mongoose.connection.on('disconnected', () => mongoose.connect(mongoURI));
 mongoose.connect(mongoURI);
 
+// Auto-wipe testing db
+if (process.env.NODE_ENV === 'test') {
+  mongoose.connection.once('connected', () => (
+    mongoose.connection.db.dropDatabase()
+  ));
+}
+
 // Setup express
 const api = express();
-api.set('multer', multer({
-  storage: multer.memoryStorage(),
-}));
 if (process.env.NODE_ENV === 'production') {
   api.use(helmet());
 } else {
@@ -32,13 +36,9 @@ if (process.env.NODE_ENV === 'production') {
 api.use(compression());
 api.use(cors());
 api.use(bodyParser.json());
-
-// Auto-Wipe testing db
-if (process.env.NODE_ENV === 'test') {
-  mongoose.connection.once('connected', () => (
-    mongoose.connection.db.dropDatabase()
-  ));
-}
+api.set('multer', multer({
+  storage: multer.memoryStorage(),
+}));
 
 // Start server
 setupRoutes(api);
